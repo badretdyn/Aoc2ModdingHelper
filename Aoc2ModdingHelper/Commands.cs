@@ -1,0 +1,214 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+
+namespace Aoc2ModdingHelper;
+
+public static class Commands
+{
+    public static void HandleCommand(string[] inputArray)
+    {
+        if (inputArray[0] == "getcitiesinfo" || inputArray[0] == "gci")
+        {
+            string path = string.Join(" ", inputArray[1..inputArray.Length]);
+
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: getcitiesinfo/gci %modifier% %path%\n" +
+                        "gets custom cities data and converts them to json file.\n" +
+                        "input path for custom cities directory, you can write spaces in path.\n" +
+                        "command without arguments uses parent directory of current.\n" +
+                        "creates json file in custom cities directory when accepted pressing [Y] key.\n" +
+                        "modifier -askpath asks path where create json file.\n" +
+                        @"example: gci AoC2\map\%your_map%\data\cities");
+                    Console.WriteLine();
+                    return;
+                }
+                else if (inputArray[1] == "-askpath" || inputArray[1] == "--a")
+                {
+                    path = string.Join(" ", inputArray[2..inputArray.Length]);
+                    try
+                    {
+                        Commands.GetCitiesInfo(path, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        Commands.GetCitiesInfo(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+
+            Console.WriteLine();
+        }
+        else if (inputArray[0] == "clear" || inputArray[0] == "cl")
+        {
+            if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
+            {
+                Console.WriteLine("command: clear/cl %modifier%\nclears screen");
+                Console.WriteLine();
+                return;
+            }
+
+            Console.Clear();
+        }
+        else if (inputArray[0] == "help")
+        {
+            if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
+            {
+                Console.WriteLine("command: help %modifier%\nprints commands");
+                Console.WriteLine();
+                return;
+            }
+
+            Console.WriteLine(GlobalData.help);
+            Console.WriteLine();
+        }
+        else if (inputArray[0] == "exit" || inputArray[0] == "close" || inputArray[0] == "quit" || inputArray[0] == "q")
+        {
+            if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
+            {
+                Console.WriteLine("command: exit/close/quit/q/[Ctrl]+[C] %modifier%\ncloses console");
+                Console.WriteLine();
+                return;
+            }
+
+            GlobalData.CommandCycle = false;
+            return;
+        }
+        else if (inputArray[0] == "convertcities" || inputArray[0] == "cc")
+        {
+            string path = string.Join(" ", inputArray[1..inputArray.Length]);
+
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: convertcities/cc %modifier% %path%\n" +
+                        "convets custom cities to json cities.\n" +
+                        "input path for map directory, you can write spaces in path.\n" +
+                        "command without arguments uses parent directory of current.\n" +
+                        "appends custom cities to json file.\n" +
+                        "removes custom cities when accepted pressing [Y] key.\n" +
+                        "modifier -del deletes custom cities without ask.\n" +
+                        @"example: cc AoC2\map\%your_map%");
+                    Console.WriteLine();
+                    return;
+                }
+                else if (inputArray[1] == "-del" || inputArray[1] == "--d")
+                {
+                    path = string.Join(" ", inputArray[2..inputArray.Length]);
+                    try
+                    {
+                        //Commands.ConvertCities(path, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        //Commands.ConvertCities(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+
+            Console.WriteLine();
+        }
+        else if (inputArray[0] == "saveconfig" || inputArray[0] == "sc")
+        {
+            Config.Save();
+
+            Console.WriteLine();
+        }
+    }
+
+    public static void GetCitiesInfo(string citiesPath, bool askPath = false)
+    {
+        if (citiesPath == null || citiesPath == "")
+        {
+            citiesPath = Directory.GetParent(GlobalData.CurDir).ToString();
+
+            if (citiesPath == null || citiesPath == "")
+            {
+                if (GlobalData.CurDir == null || GlobalData.CurDir == "")
+                    throw new ArgumentException($"{GlobalData.CurDir} must be a directory");
+                citiesPath = GlobalData.CurDir;
+            }
+        }
+
+        Console.WriteLine($"directory path: {citiesPath}");
+
+        if (!Directory.Exists(citiesPath))
+            throw new DirectoryNotFoundException($"{citiesPath} is not a directory");
+
+        List<Dictionary<string, string>> cityDict = new List<Dictionary<string, string>>();
+        try
+        {
+            cityDict = CityHelper.GetCities(citiesPath);
+        }
+        catch (Exception ex)
+        {
+            Tools.WriteError($"{ex.Message}");
+        }
+        Console.WriteLine();
+
+        Console.Write("write json? [Y] to accept: ");
+
+        var key = Tools.ReadKey();
+        Console.WriteLine();
+
+        if (key.Key == ConsoleKey.Y)
+        {
+            string fileContent = "{\r\n\tcities:\r\n\t[\r\n";
+            foreach (var city in cityDict)
+            {
+                fileContent += $"\t\t{{\r\n\t\t\tName: \"{city["sCityName"]}\",\r\n\t\t\tx: \"{city["iPosX"]}\",\r\n\t\t\ty: \"{city["iPosY"]}\",\r\n\t\t}},\r\n";
+            }
+            fileContent += "\t],\r\n\tname: Earth\r\n}";
+
+            askpath:
+
+            string jsonPath = "";
+            if (askPath)
+            {
+                Console.Write("input path where create json < ");
+                jsonPath = Tools.ReadLine();
+            }
+
+            if (askPath && (jsonPath == null || jsonPath == "" || !Directory.Exists(jsonPath)))
+            {
+                Tools.WriteError($"incorect json path {jsonPath}");
+                goto askpath;
+            }
+            Repos.WriteFile((askPath ? jsonPath : citiesPath) + @"\cities.json", fileContent);
+        }
+    }
+
+    public static void ConvertCities(string citiesPath)
+    {
+
+    }
+}
