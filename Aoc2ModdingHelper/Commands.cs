@@ -164,10 +164,10 @@ public static class Commands
         if (!Directory.Exists(citiesPath))
             throw new DirectoryNotFoundException($"{citiesPath} is not a directory");
 
-        List<Dictionary<string, string>> cityDict = new List<Dictionary<string, string>>();
+        List<CityHelper.City> cityList = new List<CityHelper.City>();
         try
         {
-            cityDict = CityHelper.GetCities(citiesPath);
+            cityList = CityHelper.GetCities(citiesPath);
         }
         catch (Exception ex)
         {
@@ -183,9 +183,9 @@ public static class Commands
         if (key.Key == ConsoleKey.Y)
         {
             string fileContent = "{\r\n\tcities:\r\n\t[\r\n";
-            foreach (var city in cityDict)
+            foreach (var city in cityList)
             {
-                fileContent += $"\t\t{{\r\n\t\t\tName: \"{city["sCityName"]}\",\r\n\t\t\tx: \"{city["iPosX"]}\",\r\n\t\t\ty: \"{city["iPosY"]}\",\r\n\t\t}},\r\n";
+                fileContent += $"\t\t{{\r\n\t\t\tName: \"{city.CityName}\",\r\n\t\t\tx: \"{city.PosX}\",\r\n\t\t\ty: \"{city.PosY}\",\r\n\t\t}},\r\n";
             }
             fileContent += "\t],\r\n\tname: Earth\r\n}";
 

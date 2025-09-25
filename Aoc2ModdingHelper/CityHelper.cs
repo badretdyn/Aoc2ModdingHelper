@@ -28,18 +28,8 @@ public static class CityHelper
         public string CityName { get; set; }
     }
 
-    public static Dictionary<string, string> GetCity(byte[] data)
+    public static City GetCity(byte[] data)
     {
-        Dictionary<string, string> result = new Dictionary<string, string>()
-        {
-            { "iCityLevel", "0" },
-            { "iPosX", "0" },
-            { "iPosY", "0" },
-            { "iWidth", "0" },
-            { "nameLength", "0" },
-            { "sCityName", "" },
-        };
-
         int[] indexes = Tools.FindPattern(data, new byte[] { 0x78, 0x70 });
         if (indexes.Length == 0) throw new Tools.PatternNotFoundException();
 
@@ -74,18 +64,20 @@ public static class CityHelper
         int nameLength = getValue(data, nameLengthIndex, 2);
         string sCityName = Encoding.UTF8.GetString(data[sCityNameIndex..data.Length]);
 
-        result["iCityLevel"] = iCityLevel.ToString();
-        result["iPosX"] = iPosX.ToString();
-        result["iPosY"] = iPosY.ToString();
-        result["iWidth"] = iWidth.ToString();
-        result["sCityName"] = sCityName;
+        City result = new City(
+            iCityLevel,
+            iPosX,
+            iPosY,
+            iWidth,
+            nameLength,
+            sCityName);
 
         return result;
     }
 
-    public static List<Dictionary<string, string>> GetCities(string dirPath)
+    public static List<City> GetCities(string dirPath)
     {
-        List<Dictionary<string, string>> cityDict = new List<Dictionary<string, string>>();
+        List<City> cityList = new List<City>();
 
         string[] filePaths = Directory.GetFiles(dirPath);
         Console.WriteLine("files:");
@@ -107,22 +99,21 @@ public static class CityHelper
                 continue;
 
             byte[] fileContent = Repos.GetFileBytes(filePath);
-            var cityInfo = GetCity(fileContent);
+            City city = GetCity(fileContent);
 
             Console.WriteLine(
                 "data:\n" +
-                $"* iCityLevel: {cityInfo["iCityLevel"]}" + "\n" +
-                $"* iPosX: {cityInfo["iPosX"]}" + "\n" +
-                $"* iPosY: {cityInfo["iPosY"]}" + "\n" +
-                $"* iWidth: {cityInfo["iWidth"]}" + "\n" +
-                $"* nameLength: {cityInfo["nameLength"]}" + "\n" +
-                $"* sCityName: {cityInfo["sCityName"]}" + "\n"
+                $"* CityLevel: {city.CityLevel}" + "\n" +
+                $"* PosX: {city.PosX}" + "\n" +
+                $"* PosY: {city.PosY}" + "\n" +
+                $"* Width: {city.Width}" + "\n" +
+                $"* NameLength: {city.NameLength}" + "\n" +
+                $"* CityName: {city.CityName}" + "\n"
                 );
 
-            cityInfo.Add("filePath", filePath);
-            cityDict.Add(cityInfo);
+            cityList.Add(city);
         }
 
-        return cityDict;
+        return cityList;
     }
 }
