@@ -17,6 +17,7 @@ namespace Aoc2ModdingHelper
                 "* help\n" +
                 "* clear/cl\n" +
                 "* getcitiesinfo/gci -askpath/--a\n" +
+                "* createaoc2file/caf\n" +
                 "* !!!convertcities/cc -del/--d\n" +
                 "* exit/close/quit/q/[Ctrl]+[C]\n" +
                 "common modifiers:\n" +

@@ -53,6 +53,8 @@ public static class Commands
                     }
                 }
             }
+            else
+                GetCitiesInfo(Directory.GetParent(GlobalData.CurDir).ToString());
 
             Console.WriteLine();
         }
@@ -143,6 +145,40 @@ public static class Commands
 
             Console.WriteLine();
         }
+        else if (inputArray[0] == "createaoc2file" || inputArray[0] == "caf")
+        {
+            string path = string.Join(" ", inputArray[1..inputArray.Length]);
+
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: createaoc2file/caf %modifier% %path%\n" +
+                        "creates Age_of_Civilization file for directory.\n" +
+                        "the file has list of all file names in directory (including extensions)\n" +
+                        "separated by ; char.\n" +
+                        "if the file is exists, ask user for overwriting.\n" +
+                        @"example: caf ...AoC2\game\civilizations");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        CreateAoc2File(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+            else
+                CreateAoc2File(Directory.GetParent(GlobalData.CurDir).ToString());
+
+            Console.WriteLine();
+        }
     }
 
     public static void GetCitiesInfo(string citiesPath, bool askPath = false)
@@ -189,7 +225,7 @@ public static class Commands
             }
             fileContent += "\t],\r\n\tname: Earth\r\n}";
 
-            askpath:
+        askpath:
 
             string jsonPath = "";
             if (askPath)
@@ -210,5 +246,60 @@ public static class Commands
     public static void ConvertCities(string citiesPath)
     {
 
+    }
+
+    public static void CreateAoc2File(string path)
+    {
+        if (path == null || path == "")
+        {
+            path = Directory.GetParent(GlobalData.CurDir).ToString();
+
+            if (path == null || path == "")
+            {
+                if (GlobalData.CurDir == null || GlobalData.CurDir == "")
+                    throw new ArgumentException($"{GlobalData.CurDir} must be a directory");
+                path = GlobalData.CurDir;
+            }
+        }
+
+        Console.WriteLine($"directory path: {path}");
+
+        if (!Directory.Exists(path))
+            throw new DirectoryNotFoundException($"{path} is not a directory");
+
+        string[] filePaths = Directory.GetFiles(path);
+        
+        string GetFileName(string path)
+        {
+            string[] array = path.Split('\\');
+
+            return array[^1];
+        }
+
+        List<string> files = new List<string>();
+        foreach (string filePath in filePaths)
+        {
+            string file = GetFileName(filePath);
+            if (file == "Age_of_Civilizations")
+                continue;
+            Console.WriteLine(file);
+            files.Add(file);
+        }
+
+        string aoc2FileContent = string.Join(';', files);
+        aoc2FileContent += ";";
+
+        if (File.Exists(path + @"\Age_of_Civilizations"))
+        {
+            Console.WriteLine("aoc2 file is exists. overwrite? [Y] to accept");
+            var key = Console.ReadKey();
+            if (key.Key == ConsoleKey.Y)
+            {
+                File.WriteAllText(path + @"\Age_of_Civilizations", aoc2FileContent);
+                return;
+            }
+        }
+
+        File.WriteAllText(path + @"\Age_of_Civilizations_Created", aoc2FileContent);
     }
 }
