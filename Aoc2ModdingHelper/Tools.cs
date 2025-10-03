@@ -79,6 +79,32 @@ namespace Aoc2ModdingHelper
             return indices.ToArray();
         }
 
+        public static int GetByteValue(byte[] data, int index, int size = 1)
+        {
+            if (size < 1) throw new ArgumentOutOfRangeException("int size must be > 0");
+            byte[] bytes = new byte[size];
+            Array.Copy(data, index, bytes, 0, size);
+            Array.Reverse(bytes);
+            int result = 0;
+            if (bytes.Length == 4)
+                result = BitConverter.ToInt32(bytes);
+            else if (bytes.Length == 2)
+                result = BitConverter.ToInt16(bytes);
+            else throw new Exception("not 4 or 2 bytes to convert to integer");
+            return result;
+        }
+
+        public static byte[] HexStringToByteArray2(string hex)
+        {
+            int numberChars = hex.Length;
+            byte[] bytes = new byte[numberChars / 2];
+            for (int i = 0; i < numberChars; i += 2)
+            {
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            }
+            return bytes;
+        }
+
         public class PatternNotFoundException : Exception
         {
             public PatternNotFoundException() : base("pattern not found in data") { }

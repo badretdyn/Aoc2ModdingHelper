@@ -23,10 +23,10 @@
 
                 string[] inputArray = input.Split(' ');
 
-                for (int i = 0; i < inputArray.Length; i++)
-                {
-                    inputArray[i] = inputArray[i].ToLower();
-                }
+                //for (int i = 0; i < inputArray.Length; i++)
+                //{
+                //    inputArray[i] = inputArray[i].ToLower();
+                //}
 
                 Commands.HandleCommand(inputArray);
             }

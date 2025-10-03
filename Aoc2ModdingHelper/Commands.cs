@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Aoc2ModdingHelper.Entities;
 
 namespace Aoc2ModdingHelper;
 
@@ -179,6 +174,38 @@ public static class Commands
 
             Console.WriteLine();
         }
+        else if (inputArray[0] == "getcontinentsinfo" || inputArray[0] == "gcni")
+        {
+            string path = string.Join(" ", inputArray[1..inputArray.Length]);
+
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: getcontinentsinfo/gcni %modifier% %aoc2_path%\n" +
+                        "deserializes continent files and prints information about continents.\n" +
+                        "continents located in %aoc2_path%\\map\\data\\continents\n" +
+                        @"example: gcni D:\game\Age of Civilizations 2");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        GetContinentsInfo(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+            else
+                GetCitiesInfo(Directory.GetParent(GlobalData.CurDir).ToString());
+
+            Console.WriteLine();
+        }
     }
 
     public static void GetCitiesInfo(string citiesPath, bool askPath = false)
@@ -301,5 +328,22 @@ public static class Commands
         }
 
         File.WriteAllText(path + @"\Age_of_Civilizations_Created", aoc2FileContent);
+    }
+
+    public static void GetContinentsInfo(string aoc2Path)
+    {
+        string packgesDataPath = aoc2Path + @"\map\data\continents\packges_data";
+        var continents = Continent.GetContinents(packgesDataPath);
+
+        foreach (var i in continents)
+        {
+            Console.WriteLine(
+                $"file {i.FileName}:\n" +
+                $"\tB: {i.B}\n" +
+                $"\tG: {i.G}\n" +
+                $"\tR: {i.R}\n" +
+                $"\tNameLength: {i.NameLength}\n" +
+                $"\tName: {i.Name}");
+        }
     }
 }

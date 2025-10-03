@@ -13,15 +13,16 @@ namespace Aoc2ModdingHelper
         public static string? CurDir { get; set; } = Directory.GetCurrentDirectory();
 
         public static string help = $"current directory: {GlobalData.CurDir}" + "\n" +
-                "commands:\n" +
-                "* help\n" +
-                "* clear/cl\n" +
-                "* getcitiesinfo/gci -askpath/--a\n" +
-                "* createaoc2file/caf\n" +
-                "* !!!convertcities/cc -del/--d\n" +
-                "* exit/close/quit/q/[Ctrl]+[C]\n" +
-                "common modifiers:\n" +
-                "* -help/--? -- prints help information";
+            "commands:\n" +
+            "* help\n" +
+            "* clear/cl\n" +
+            "* getcitiesinfo/gci -askpath/--a\n" +
+            "* createaoc2file/caf\n" +
+            "* getcontinentsinfo/gcni\n" +
+            "* !!!convertcities/cc -del/--d\n" +
+            "* exit/close/quit/q/[Ctrl]+[C]\n" +
+            "common modifiers:\n" +
+            "* -help/--? -- prints information about command";
 
         public static bool CommandCycle = true;
 
