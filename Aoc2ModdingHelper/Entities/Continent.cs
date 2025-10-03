@@ -67,8 +67,15 @@ namespace Aoc2ModdingHelper.Entities
             {
                 if (filePath.Split('\\')[^1] == "Age_of_Civilizations")
                     continue;
-                Continent continent = new Continent(filePath);
-                continents.Add(continent);
+                try
+                {
+                    Continent continent = new Continent(filePath);
+                    continents.Add(continent);
+                }
+                catch (Exception ex)
+                {
+                    Tools.WriteError($"error while processing {filePath}\n{ex.Message}");
+                }
             }
 
             return continents.ToArray();

@@ -335,15 +335,17 @@ public static class Commands
         string packgesDataPath = aoc2Path + @"\map\data\continents\packges_data";
         var continents = Continent.GetContinents(packgesDataPath);
 
+        Console.WriteLine("files:");
         foreach (var i in continents)
         {
             Console.WriteLine(
-                $"file {i.FileName}:\n" +
-                $"\tB: {i.B}\n" +
-                $"\tG: {i.G}\n" +
-                $"\tR: {i.R}\n" +
-                $"\tNameLength: {i.NameLength}\n" +
-                $"\tName: {i.Name}");
+                $"\tfile {i.FileName}:\n" +
+                $"\t\tB: {i.B}\n" +
+                $"\t\tG: {i.G}\n" +
+                $"\t\tR: {i.R}\n" +
+                $"\t\tNameLength: {i.NameLength}\n" +
+                $"\t\tName: {i.Name}");
         }
+        Console.WriteLine($"successfully processed file count: {continents.Length}");
     }
 }
