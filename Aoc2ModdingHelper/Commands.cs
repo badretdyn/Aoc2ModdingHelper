@@ -1,4 +1,5 @@
 ﻿using Aoc2ModdingHelper.Entities;
+using System.IO;
 
 namespace Aoc2ModdingHelper;
 
@@ -6,10 +7,11 @@ public static class Commands
 {
     public static void HandleCommand(string[] inputArray)
     {
-        if (inputArray[0] == "getcitiesinfo" || inputArray[0] == "gci")
-        {
-            string path = string.Join(" ", inputArray[1..inputArray.Length]);
+        var command = inputArray[0].ToLower();
+        string path = string.Join(" ", inputArray[1..inputArray.Length]);
 
+        if (command == "getcitiesinfo" || command == "gci")
+        {
             if (inputArray.Length > 1)
             {
                 if (inputArray[1] == "-help" || inputArray[1] == "--?")
@@ -53,7 +55,7 @@ public static class Commands
 
             Console.WriteLine();
         }
-        else if (inputArray[0] == "clear" || inputArray[0] == "cl")
+        else if (command == "clear" || command == "cl")
         {
             if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
             {
@@ -64,7 +66,7 @@ public static class Commands
 
             Console.Clear();
         }
-        else if (inputArray[0] == "help")
+        else if (command == "help")
         {
             if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
             {
@@ -76,7 +78,7 @@ public static class Commands
             Console.WriteLine(GlobalData.help);
             Console.WriteLine();
         }
-        else if (inputArray[0] == "exit" || inputArray[0] == "close" || inputArray[0] == "quit" || inputArray[0] == "q")
+        else if (command == "exit" || command == "close" || command == "quit" || command == "q")
         {
             if (inputArray.Length > 1 && (inputArray[1] == "-help" || inputArray[1] == "--?"))
             {
@@ -88,10 +90,8 @@ public static class Commands
             GlobalData.CommandCycle = false;
             return;
         }
-        else if (inputArray[0] == "convertcities" || inputArray[0] == "cc")
+        else if (command == "convertcities" || command == "cc")
         {
-            string path = string.Join(" ", inputArray[1..inputArray.Length]);
-
             if (inputArray.Length > 1)
             {
                 if (inputArray[1] == "-help" || inputArray[1] == "--?")
@@ -134,16 +134,14 @@ public static class Commands
 
             Console.WriteLine();
         }
-        else if (inputArray[0] == "saveconfig" || inputArray[0] == "sc")
+        else if (command == "saveconfig" || command == "sc")
         {
             Config.Save();
 
             Console.WriteLine();
         }
-        else if (inputArray[0] == "createaoc2file" || inputArray[0] == "caf")
+        else if (command == "createaoc2file" || command == "caf")
         {
-            string path = string.Join(" ", inputArray[1..inputArray.Length]);
-
             if (inputArray.Length > 1)
             {
                 if (inputArray[1] == "-help" || inputArray[1] == "--?")
@@ -174,10 +172,8 @@ public static class Commands
 
             Console.WriteLine();
         }
-        else if (inputArray[0] == "getcontinentsinfo" || inputArray[0] == "gcni")
+        else if (command == "getcontinentsinfo" || command == "gcni")
         {
-            string path = string.Join(" ", inputArray[1..inputArray.Length]);
-
             if (inputArray.Length > 1)
             {
                 if (inputArray[1] == "-help" || inputArray[1] == "--?")
@@ -205,6 +201,32 @@ public static class Commands
                 GetCitiesInfo(Directory.GetParent(GlobalData.CurDir).ToString());
 
             Console.WriteLine();
+        }
+        else if (command == "getcontinentpackgeinfo" || command == "gcpi")
+        {
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: getcontinentpackgeinfo/gcpi %modifier% %continent_packge_path%\n" +
+                        "deserializes continent packge file and prints information about it.\n" +
+                        "continent packges located in %aoc2_path%\\map\\data\\continents\\packges\n" +
+                        @"example: gcpi D:\game\Age of Civilizations 2\map\data\continents\packges\Earth6");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        GetContinentPackgeInfo(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Tools.WriteError($"{ex.Message}");
+                    }
+                }
+            }
         }
     }
 
@@ -333,7 +355,7 @@ public static class Commands
     public static void GetContinentsInfo(string aoc2Path)
     {
         string packgesDataPath = aoc2Path + @"\map\data\continents\packges_data";
-        var continents = Continent.GetContinents(packgesDataPath);
+        var continents = Continent.DeserializeContinents(packgesDataPath);
 
         Console.WriteLine("files:");
         foreach (var i in continents)
@@ -347,5 +369,14 @@ public static class Commands
                 $"\t\tName: {i.Name}");
         }
         Console.WriteLine($"successfully processed file count: {continents.Length}");
+    }
+
+    public static void GetContinentPackgeInfo(string packgePath)
+    {
+        ContinentPackge contPackge = ContinentPackge.DeserializePackge(packgePath);
+
+        Console.WriteLine(
+            $"processing file {packgePath}\n" +
+            contPackge.ToStringList());
     }
 }

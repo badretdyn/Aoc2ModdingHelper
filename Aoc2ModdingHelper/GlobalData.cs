@@ -19,6 +19,7 @@ namespace Aoc2ModdingHelper
             "* getcitiesinfo/gci -askpath/--a\n" +
             "* createaoc2file/caf\n" +
             "* getcontinentsinfo/gcni\n" +
+            "* getcontinentpackgeinfo/gcpi\n" +
             "* !!!convertcities/cc -del/--d\n" +
             "* exit/close/quit/q/[Ctrl]+[C]\n" +
             "common modifiers:\n" +

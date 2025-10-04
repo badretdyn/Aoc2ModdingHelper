@@ -8,8 +8,67 @@ namespace Aoc2ModdingHelper.Entities
 {
     public class Continent
     {
-        public Continent(string filePath)
+        public Continent(string fileName, float b, float g, float r, short nameLength, string name)
         {
+            FileName = fileName;
+            B = b;
+            G = g;
+            R = r;
+            NameLength = nameLength;
+            Name = name;
+        }
+
+        public Continent(string fileName, float b, float g, float r, string name)
+        {
+            FileName = fileName;
+            B = b;
+            G = g;
+            R = r;
+            NameLength = (short)name.Length;
+            Name = name;
+        }
+
+        public Continent(short nameLength, string name)
+        {
+            FileName = null;
+            B = null;
+            G = null;
+            R = null;
+            NameLength = nameLength;
+            Name = name;
+        }
+
+        public Continent(string name)
+        {
+            FileName = null;
+            B = null;
+            G = null;
+            R = null;
+            NameLength = (short)name.Length;
+            Name = name;
+        }
+
+        public string? FileName { get; set; }
+
+        public float? B { get; set; }
+
+        public float? G { get; set; }
+
+        public float? R { get; set; }
+
+        public short NameLength { get; set; }
+
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Continent)}:{{{FileName}, {B}, {G}, {R}, {NameLength}, {Name}}}";
+        }
+
+        public static Continent DeserializeContinent(string filePath)
+        {
+            string fileName = filePath.Split('\\')[^1];
+
             byte[] fileContent = File.ReadAllBytes(filePath);
 
             int fBIndex = 0x79;
@@ -24,42 +83,17 @@ namespace Aoc2ModdingHelper.Entities
             short nameLength = ByteHelper.ConvertToInt16(fileContent, nameLengthIndex);
             string name = ByteHelper.ConvertToString(fileContent, nameLength, nameIndex);
 
-            FileName = filePath.Split('\\')[^1];
-            B = fB;
-            G = fG;
-            R = fR;
-            NameLength = nameLength;
-            Name = name;
+            //FileName = filePath.Split('\\')[^1];
+            //B = fB;
+            //G = fG;
+            //R = fR;
+            //NameLength = nameLength;
+            //Name = name;
+
+            return new Continent(fileName, fB, fG, fR, nameLength, name);
         }
 
-        public Continent(float b, float g, float r, short nameLength, string name)
-        {
-            FileName = string.Empty;
-            B = b;
-            G = g;
-            R = r;
-            NameLength = nameLength;
-            Name = name;
-        }
-
-        public string FileName { get; set; }
-
-        public float B { get; set; }
-
-        public float G { get; set; }
-
-        public float R { get; set; }
-
-        public short NameLength { get; set; }
-
-        public string Name { get; set; }
-
-        public override string ToString()
-        {
-            return $"{FileName} {B} {G} {R} {NameLength} {Name}";
-        }
-
-        public static Continent[] GetContinents(string packgeDataPath)
+        public static Continent[] DeserializeContinents(string packgeDataPath)
         {
             string[] filePaths = Directory.GetFiles(packgeDataPath);
             List<Continent> continents = new List<Continent>();
