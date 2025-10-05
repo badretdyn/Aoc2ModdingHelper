@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace Aoc2ModdingHelper.Entities;
 
-public class ContinentPackageBuilder
+public class ContinentPackgeSerializer
 {
-    public ContinentPackageBuilder(string buildPath, int continentCount, int arrayListCapacity, List<Continent> continents, string packageName)
+    public ContinentPackgeSerializer(string serializePath, ContinentPackge continentPackge)
     {
-        BuildPath = buildPath;
-        ContinentCount = continentCount;
-        ArrayListCapacity = arrayListCapacity;
-        Continents = continents;
-        PackageName = packageName;
+        SerializePath = serializePath;
+        ContinentPackge = continentPackge;
     }
 
     private byte[] _fileStart =
@@ -34,39 +31,33 @@ public class ContinentPackageBuilder
             0x7A, 0x65, 0x78, 0x70
         ];
 
-    public string BuildPath { get; set; }
+    public string SerializePath { get; set; }
 
-    public int ContinentCount { get; set; }
+    //public int ContinentCount { get; set; }
 
-    public int ArrayListCapacity { get; set; }
+    //public int ArrayListCapacity { get; set; }
 
-    public List<Continent> Continents { get; set; }
+    //public List<Continent> Continents { get; set; }
 
-    public string PackageName { get; set; }
+    //public string PackageName { get; set; }
+
+    public ContinentPackge ContinentPackge { get; set; }
 
     public override string ToString()
     {
-        return $"{nameof(ContinentPackge)}:{{{ContinentCount}, {ArrayListCapacity}, {Continents}, {PackageName}}}";
+        return $"{nameof(ContinentPackgeSerializer)}:{{{SerializePath}, {ContinentPackge}}}";
     }
 
     public string ToStringList(string listElementSeparator = ",\n")
     {
-        string continents = "";
-        string fileStart = "";
-
-        for (int i = 0; i < ContinentCount; i++)
-        {
-            continents += "\t" + Continents[i] + (i == ContinentCount - 1 ? "" : listElementSeparator);
-        }
-
-        return $"{nameof(ContinentPackge)}:{{{ContinentCount}, {ArrayListCapacity},\n{Continents}:\n[\n{continents}\n],\n{PackageName}}}";
+        return $"{nameof(ContinentPackgeSerializer)}:{{{SerializePath}, {ContinentPackge.ToStringList(listElementSeparator)}}}";
     }
 
     private byte[] ConvertContinentsToBytes()
     {
         List<byte> bytes = new List<byte>();
 
-        foreach (Continent cont in Continents)
+        foreach (Continent cont in ContinentPackge.Continents)
         {
             // TC_STRING
             bytes.Add(0x74);
@@ -88,11 +79,11 @@ public class ContinentPackageBuilder
         fileContent.AddRange(_fileStart);
 
         // array length, 4 bytes
-        fileContent.AddRange(ByteHelper.ConvertToBytes(ContinentCount));
+        fileContent.AddRange(ByteHelper.ConvertToBytes(ContinentPackge.ContinentCount));
         // TC_BLOCKDATA
         fileContent.AddRange([0x77, 0x04]);
         // array capacity, 4 bytes
-        fileContent.AddRange(ByteHelper.ConvertToBytes(ArrayListCapacity));
+        fileContent.AddRange(ByteHelper.ConvertToBytes(ContinentPackge.ArrayListCapacity));
 
         // continents
         fileContent.AddRange(ConvertContinentsToBytes());
@@ -100,10 +91,10 @@ public class ContinentPackageBuilder
         // PackageName TC_STRING, 1 byte
         fileContent.Add(0x74);
         // PackageName Length, 2 bytes
-        fileContent.AddRange(ByteHelper.ConvertToBytes((short)PackageName.Length));
+        fileContent.AddRange(ByteHelper.ConvertToBytes((short)ContinentPackge.PackageName.Length));
         // PackageName, string in bytes
-        fileContent.AddRange(ByteHelper.ConvertToBytes(PackageName));
+        fileContent.AddRange(ByteHelper.ConvertToBytes(ContinentPackge.PackageName));
 
-        File.WriteAllBytes(BuildPath, fileContent.ToArray());
+        File.WriteAllBytes(SerializePath, fileContent.ToArray());
     }
 }

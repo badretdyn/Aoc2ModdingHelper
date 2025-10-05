@@ -435,9 +435,8 @@ public static class Commands
             Console.WriteLine($"{i}\t{continentPackge.Continents[i].Name}");
         }
 
-        ContinentPackageBuilder packgeBuilder =
-            new ContinentPackageBuilder(Directory.GetParent(packgePath).ToString() + @"\new_package", continentPackge.ContinentCount,
-            continentPackge.ArrayListCapacity, continentPackge.Continents, continentPackge.PackageName);
+        ContinentPackgeSerializer packgeBuilder =
+            new ContinentPackgeSerializer(Directory.GetParent(packgePath).ToString() + @"\new_package", continentPackge);
         packgeBuilder.Build();
 
         Console.WriteLine("type command");
