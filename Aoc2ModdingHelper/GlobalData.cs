@@ -20,6 +20,7 @@ namespace Aoc2ModdingHelper
             "* createaoc2file/caf\n" +
             "* getcontinentsinfo/gcni\n" +
             "* getcontinentpackgeinfo/gcpi\n" +
+            "* managepackge/mp\n" +
             "* !!!convertcities/cc -del/--d\n" +
             "* exit/close/quit/q/[Ctrl]+[C]\n" +
             "common modifiers:\n" +
