@@ -1,9 +1,14 @@
-﻿namespace Aoc2ModdingHelper
+﻿using Aoc2ModdingHelper.Utils;
+
+namespace Aoc2ModdingHelper
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            if (!Directory.Exists(GlobalData.GeneratedDir))
+                Directory.CreateDirectory(GlobalData.GeneratedDir);
+
             Config.Load();
 
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -14,7 +19,7 @@
             {
                 Console.Write("< ");
 
-                string input = Tools.ReadLine();
+                string input = InputOutput.ReadLine();
 
                 if (input == "" || input == null)
                     continue;

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Aoc2ModdingHelper.Utils;
 
 namespace Aoc2ModdingHelper;
 
@@ -36,8 +37,8 @@ public class Config
                     return;
                 }
             }
-            catch (Exception ex) { Tools.WriteError($"{ex.Message}"); }
+            catch (Exception ex) { InputOutput.WriteError($"{ex.Message}"); }
         }
-        Tools.WriteError($"no configuration");
+        InputOutput.WriteError($"no configuration");
     }
 }

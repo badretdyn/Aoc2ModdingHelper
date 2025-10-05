@@ -1,16 +1,8 @@
-﻿using Aoc2ModdingHelper.Entities;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Text;
 
-namespace Aoc2ModdingHelper
+namespace Aoc2ModdingHelper.Utils
 {
-    public static class ByteHelper
+    public static class BinaryUtils
     {
         public static float ConvertToFloat32(byte[] data, int index = 0)
         {
@@ -69,10 +61,10 @@ namespace Aoc2ModdingHelper
         public static byte[] ConvertToBytes(int number)
         {
             byte[] bytes = BitConverter.GetBytes(number);
-            
+
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
-            
+
             return bytes;
         }
 
@@ -92,7 +84,7 @@ namespace Aoc2ModdingHelper
             for (int i = 0; i < bytes.Length; i++)
             {
                 stringBytes += $"0x{bytes[i]:X}, ";
-                if (useLineBreak && (i % 16 == 0) && i != 0)
+                if (useLineBreak && i % 16 == 0 && i != 0)
                     stringBytes += "\n";
             }
 
@@ -103,6 +95,41 @@ namespace Aoc2ModdingHelper
         {
             byte[] fileContent = File.ReadAllBytes(filePath);
             return BytesToCsharp(filePath, useLineBreak);
+        }
+
+        public static int[] FindPattern(byte[] source, byte[] pattern)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (pattern == null)
+                throw new ArgumentNullException(nameof(pattern));
+            if (pattern.Length == 0)
+                throw new ArgumentException("pattern cannot be empty", nameof(pattern));
+            if (pattern.Length > source.Length)
+                return new int[0];
+
+            var indices = new List<int>();
+
+            for (int i = 0; i <= source.Length - pattern.Length; i++)
+            {
+                bool found = true;
+
+                for (int j = 0; j < pattern.Length; j++)
+                {
+                    if (source[i + j] != pattern[j])
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            return indices.ToArray();
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Aoc2ModdingHelper.Entities;
+using Aoc2ModdingHelper.Serializers;
+using Aoc2ModdingHelper.Utils;
 using System.IO;
 
 namespace Aoc2ModdingHelper;
@@ -35,7 +37,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
                 else
@@ -46,7 +48,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
@@ -116,7 +118,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
                 else
@@ -127,7 +129,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
@@ -163,7 +165,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
@@ -193,7 +195,7 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
@@ -223,16 +225,20 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
         }
         else if (command == "managepackge" || command == "mp")
         {
-            if (inputArray.Length > 1)
+            if (inputArray.Length == 1)
             {
-                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                ManagePackge("");
+            }
+            else if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == " - help" || inputArray[1] == "--?")
                 {
                     Console.WriteLine("command: menagepackge/mp %modifier% %continent_packge_path%\n" +
                         "manage continent packge changing order of continents and renaming\n" +
@@ -249,15 +255,59 @@ public static class Commands
                     }
                     catch (Exception ex)
                     {
-                        Tools.WriteError($"{ex.Message}");
+                        InputOutput.WriteError($"{ex.Message}");
                     }
                 }
             }
+
+            Console.WriteLine();
         }
     }
 
-    public static void GetCitiesInfo(string citiesPath, bool askPath = false)
+    private static void GetCitiesInfo(string citiesPath, bool askPath = false)
     {
+        City[] getCities(string dirPath)
+        {
+            List<City> cityList = new List<City>();
+
+            string[] filePaths = Directory.GetFiles(dirPath);
+            Console.WriteLine("files:");
+            foreach (string path in filePaths)
+            {
+                Console.WriteLine($"* {path}");
+            }
+
+            if (filePaths.Length == 0)
+                throw new ArgumentException($"no files in directory: {dirPath}");
+            Console.WriteLine();
+
+            foreach (string filePath in filePaths)
+            {
+                Console.WriteLine($"file: {filePath}");
+
+                string[] pathSplited = filePath.Split('\\');
+                if (pathSplited[^1] == "Age_of_Civilizations")
+                    continue;
+
+                byte[] fileContent = File.ReadAllBytes(filePath);
+                City city = CitySerializer.Deserialize(fileContent);
+
+                Console.WriteLine(
+                    "data:\n" +
+                    $"* CityLevel: {city.CityLevel}" + "\n" +
+                    $"* PosX: {city.PosX}" + "\n" +
+                    $"* PosY: {city.PosY}" + "\n" +
+                    $"* Width: {city.Width}" + "\n" +
+                    $"* NameLength: {city.NameLength}" + "\n" +
+                    $"* CityName: {city.CityName}" + "\n"
+                    );
+
+                cityList.Add(city);
+            }
+
+            return cityList.ToArray();
+        }
+
         if (citiesPath == null || citiesPath == "")
         {
             citiesPath = Directory.GetParent(GlobalData.CurDir).ToString();
@@ -275,20 +325,20 @@ public static class Commands
         if (!Directory.Exists(citiesPath))
             throw new DirectoryNotFoundException($"{citiesPath} is not a directory");
 
-        List<CityHelper.City> cityList = new List<CityHelper.City>();
+        List<City> cityList = new List<City>();
         try
         {
-            cityList = CityHelper.GetCities(citiesPath);
+            cityList = getCities(citiesPath).ToList();
         }
         catch (Exception ex)
         {
-            Tools.WriteError($"{ex.Message}");
+            InputOutput.WriteError($"{ex.Message}");
         }
         Console.WriteLine();
 
         Console.Write("write json? [Y] to accept: ");
 
-        var key = Tools.ReadKey();
+        var key = InputOutput.ReadKey();
         Console.WriteLine();
 
         if (key.Key == ConsoleKey.Y)
@@ -306,24 +356,24 @@ public static class Commands
             if (askPath)
             {
                 Console.Write("input path where create json < ");
-                jsonPath = Tools.ReadLine();
+                jsonPath = InputOutput.ReadLine();
             }
 
             if (askPath && (jsonPath == null || jsonPath == "" || !Directory.Exists(jsonPath)))
             {
-                Tools.WriteError($"incorect json path {jsonPath}");
+                InputOutput.WriteError($"incorect json path {jsonPath}");
                 goto askpath;
             }
-            Repos.WriteFile((askPath ? jsonPath : citiesPath) + @"\cities.json", fileContent);
+            File.WriteAllText((askPath ? jsonPath : citiesPath) + @"\cities.json", fileContent);
         }
     }
 
-    public static void ConvertCities(string citiesPath)
+    private static void ConvertCities(string citiesPath)
     {
 
     }
 
-    public static void CreateAoc2File(string path)
+    private static void CreateAoc2File(string path)
     {
         if (path == null || path == "")
         {
@@ -378,10 +428,10 @@ public static class Commands
         File.WriteAllText(path + @"\Age_of_Civilizations_Created", aoc2FileContent);
     }
 
-    public static void GetContinentsInfo(string aoc2Path)
+    private static void GetContinentsInfo(string aoc2Path)
     {
         string packgesDataPath = aoc2Path + @"\map\data\continents\packges_data";
-        var continents = Continent.DeserializeContinents(packgesDataPath);
+        var continents = ContinentSerializer.DeserializeMany(packgesDataPath);
 
         Console.WriteLine("files:");
         foreach (var i in continents)
@@ -397,49 +447,165 @@ public static class Commands
         Console.WriteLine($"successfully processed file count: {continents.Length}");
     }
 
-    public static void GetContinentPackgeInfo(string packgePath)
+    private static void GetContinentPackgeInfo(string packgePath)
     {
-        ContinentPackge contPackge = ContinentPackge.DeserializePackge(packgePath);
+        ContinentPackge contPackge = ContinentPackgeSerializer.DeserializePackge(packgePath);
 
         Console.WriteLine(
             $"processing file {packgePath}\n" +
             contPackge.ToStringList());
     }
 
-    public static void ManagePackge(string packgePath)
+    #region ManagePackage
+    private static void ManagePackge(string packgePath)
     {
-        ContinentPackge continentPackge = ContinentPackge.DeserializePackge(packgePath);
+        string help =
+            "commands:\n" +
+            "* renamethis/rt %new_packge_name%\n" +
+            "* rename/ren %index% %new_name%\n" +
+            "* !delete/del %index%\n" +
+            "* !add %name%\n" +
+            "* !move %index% %new_index%\n" +
+            "* save/sv\n" +
+            "* exit/close/quit/q";
 
-        byte[] fileStart = 
-            [
-                0xAC, 0xED, 0x0, 0x5, 0x73, 0x72, 0x0, 0x3C, 0x61, 0x67, 0x65, 0x2E, 0x6F, 0x66, 0x2E, 0x63, 0x69,
-                0x76, 0x69, 0x6C, 0x69, 0x7A, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x73, 0x32, 0x2E, 0x6A, 0x61, 0x6B,
-                0x6F, 0x77, 0x73, 0x6B, 0x69, 0x2E, 0x6C, 0x75, 0x6B, 0x61, 0x73, 0x7A, 0x2E, 0x50, 0x61, 0x63,
-                0x6B, 0x61, 0x67, 0x65, 0x5F, 0x43, 0x6F, 0x6E, 0x74, 0x69, 0x6E, 0x65, 0x6E, 0x74, 0x73, 0x44,
-                0x61, 0x74, 0x61, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x2, 0x4C, 0x0,
-                0xF, 0x6C, 0x43, 0x6F, 0x6E, 0x74, 0x69, 0x6E, 0x65, 0x6E, 0x74, 0x73, 0x54, 0x61, 0x67, 0x73,
-                0x74, 0x0, 0x10, 0x4C, 0x6A, 0x61, 0x76, 0x61, 0x2F, 0x75, 0x74, 0x69, 0x6C, 0x2F, 0x4C, 0x69,
-                0x73, 0x74, 0x3B, 0x4C, 0x0, 0xC, 0x73, 0x50, 0x61, 0x63, 0x6B, 0x61, 0x67, 0x65, 0x4E, 0x61,
-                0x6D, 0x65, 0x74, 0x0, 0x12, 0x4C, 0x6A, 0x61, 0x76, 0x61, 0x2F, 0x6C, 0x61, 0x6E, 0x67, 0x2F,
-                0x53, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x3B, 0x78, 0x70, 0x73, 0x72, 0x0, 0x13, 0x6A, 0x61, 0x76,
-                0x61, 0x2E, 0x75, 0x74, 0x69, 0x6C, 0x2E, 0x41, 0x72, 0x72, 0x61, 0x79, 0x4C, 0x69, 0x73, 0x74,
-                0x78, 0x81, 0xD2, 0x1D, 0x99, 0xC7, 0x61, 0x9D, 0x3, 0x0, 0x1, 0x49, 0x0, 0x4, 0x73, 0x69,
-                0x7A, 0x65, 0x78, 0x70
-            ];
-            //File.ReadAllBytes(packgePath)[0..197];
+        bool isAbsolutePath = false;
+        if (packgePath.Contains(":\\"))
+            isAbsolutePath = true;
 
-        Console.WriteLine(ByteHelper.BytesToCsharp(fileStart, true));
+        packgePath = isAbsolutePath? packgePath : GlobalData.GeneratedDir + @$"\{packgePath}";
 
-        for (int i = 0; i < continentPackge.Continents.Count; i++)
+        ContinentPackge continentPackge;
+        if (File.Exists(packgePath))
         {
-            Console.WriteLine($"{i}\t{continentPackge.Continents[i].Name}");
+            continentPackge = ContinentPackgeSerializer.DeserializePackge(packgePath);
+            Console.WriteLine($"opened {packgePath}\n");
+        }
+        else
+        {
+            continentPackge = new ContinentPackge(0, 0, new List<Continent>(), "NewContinentPackge");
+            Console.WriteLine("creating new packge\n");
         }
 
-        ContinentPackgeSerializer packgeBuilder =
-            new ContinentPackgeSerializer(Directory.GetParent(packgePath).ToString() + @"\new_package", continentPackge);
-        packgeBuilder.Build();
+        bool commandCycle = true;
+        while (commandCycle)
+        {
+            Console.WriteLine($"PackgeName: {continentPackge.PackageName}\n" +
+                $"Continents:\n[\n");
+            for (int i = 0; i < continentPackge.Continents.Count; i++)
+            {
+                Console.WriteLine($"\t{i}\t{continentPackge.Continents[i].Name}");
+            }
+            Console.WriteLine("]\n");
 
-        Console.WriteLine("type command");
-        string command = Tools.ReadLine();
+            //byte[] packge = ContinentPackgeSerializer.Serialize(continentPackge);
+            //File.WriteAllBytes((Directory.GetParent(packgePath).ToString()) + @"\new_packge", packge);
+
+            Console.WriteLine(help + "\n");
+            Console.Write("< ");
+            string[] inputArray = InputOutput.ReadLine().Split();
+            HandleManagePackgeCommand(ref commandCycle, inputArray, continentPackge);
+        }
+
+        Console.WriteLine("exited from managing packge");
     }
+
+    private static void HandleManagePackgeCommand(ref bool commandCycle, string[] inputArray, ContinentPackge continentPackge)
+    {
+        Console.WriteLine();
+
+        string command = inputArray[0];
+        if (command == "rename" || command == "ren")
+        {
+            if (inputArray.Length > 1)
+            {
+                string second = inputArray[1];
+                if (second == "-help" || second == "--?")
+                {
+                    Console.WriteLine(
+                        "command: rename/ren %index% %new_name%\n" +
+                        "renames object to %new_name% without spaces" +
+                        "example: ren 0 MyObj123");
+                }
+                else if ("0123456789".Contains(second[0]))
+                {
+                    try
+                    {
+                        int index = Convert.ToInt32(second);
+                        string newName = inputArray[2];
+                        continentPackge.Continents[index].Name = newName;
+                        continentPackge.Continents[index].NameLength = (short)newName.Length;
+                    }
+                    catch (Exception ex) { InputOutput.WriteError(ex.Message); }
+                }
+            }
+        }
+        else if (command == "exit" || command == "close" || command == "quit" || command == "q")
+        {
+            if (inputArray.Length > 1)
+            {
+                string second = inputArray[1];
+                if (second == "-help" || second == "--?")
+                {
+                    Console.WriteLine(
+                        "command: exit/close/quit/q\n" +
+                        "exits managing packge");
+                }
+
+                return;
+            }
+
+            commandCycle = false;
+        }
+        else if (command == "save" || command == "sv")
+        {
+            byte[] packgeBytes = ContinentPackgeSerializer.Serialize(continentPackge);
+
+            if (inputArray.Length > 1)
+            {
+                string second = inputArray[1];
+                if (second == "-help" || second == "--?")
+                {
+                    Console.WriteLine(
+                        "command: save/sv %save_path%\n" +
+                        "saves continent package file.\n" +
+                        $"command with empty save_path saves in {GlobalData.GeneratedDir}\\%PackageName%\n" +
+                        $"command with non-absolute path saves in {GlobalData.GeneratedDir}\\%save_path%, you give file name to save." +
+                        @"example sv D:\game\AoC2 CR BE\map\data\continents\packges\MyContinentPackge");
+
+                    return;
+                }
+                else
+                {
+                    string path = GlobalData.GeneratedDir + $"\\{second}";
+                    if (second.Contains(":\\"))
+                        path = string.Join(' ', inputArray[1..^1]);
+                    File.WriteAllBytes(path, packgeBytes);
+                }
+            }
+
+            File.WriteAllBytes(GlobalData.GeneratedDir + @$"\{continentPackge.PackageName}", packgeBytes);
+        }
+        else if (command == "renamethis" || command == "rt")
+        {
+            if (inputArray.Length > 1)
+            {
+                string second = inputArray[1];
+                if (second == "-help" || second == "--?")
+                {
+                    Console.WriteLine(
+                        "command: renamthis/rt %new_packge_name%\n" +
+                        "renames current continent packge (not file name).\n" +
+                        @"example rt NewPackgeName");
+
+                    return;
+                }
+                else
+                {
+                    continentPackge.PackageName = second;
+                }
+            }
+        }
+    }
+    #endregion ManagePackge
 }
