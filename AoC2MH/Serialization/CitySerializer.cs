@@ -3,11 +3,26 @@ using Aoc2mh.Entities;
 using Aoc2mh.Utils;
 using Aoc2mh.Exceptions;
 
-namespace Aoc2mh.Serializers
+namespace AoC2mh.Serialization
 {
-    public class CitySerializer
+    public static class CitySerializer
     {
-        public static City Deserialize(byte[] data)
+        public static byte[] ToJava(City city)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static City FromJava(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            City city = FromJava(fileBytes);
+            city.FileName = fileName;
+            return city;
+        }
+
+        [Obsolete("Have to be changed", false)]
+        public static City FromJava(byte[] data)
         {
             int[] indexes = BinaryUtils.FindPattern(data, new byte[] { 0x78, 0x70 });
             if (indexes.Length == 0) throw new PatternNotFoundException();
@@ -48,7 +63,7 @@ namespace Aoc2mh.Serializers
                 iPosX,
                 iPosY,
                 iWidth,
-                nameLength,
+                (short)nameLength,
                 sCityName);
 
             return result;

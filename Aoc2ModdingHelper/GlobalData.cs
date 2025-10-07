@@ -6,7 +6,7 @@
 
         public static string? GeneratedDir { get; set; } = CurDir + @"\Generated";
 
-        public static string help = $"current directory: {GlobalData.CurDir}" + "\n" +
+        public static string Help { get; set; } = $"current directory: {GlobalData.CurDir}" + "\n" +
             "commands:\n" +
             "* help\n" +
             "* clear/cl\n" +
@@ -20,7 +20,7 @@
             "common modifiers:\n" +
             "* -help/--? -- prints information about command";
 
-        public static bool CommandCycle = true;
+        public static bool CommandCycle { get; set; } = true;
 
         public static Config? Config { get; set; }
     }

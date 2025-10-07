@@ -8,7 +8,7 @@ namespace Aoc2mh.Exceptions
 {
     public class PatternNotFoundException : Exception
     {
-        public PatternNotFoundException() : base("pattern not found in data") { }
-        public PatternNotFoundException(string message) : base(message) { }
+        public PatternNotFoundException() : base("Pattern not found in data.") { }
+        public PatternNotFoundException(string paramName, string pattern) : base($"Pattern {pattern} not found in {paramName}.") { }
     }
 }

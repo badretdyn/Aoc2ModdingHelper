@@ -1,5 +1,6 @@
 ﻿using Aoc2mh.Entities;
-using Aoc2mh.Serializers;
+using AoC2mh.Entities;
+using AoC2mh.Serialization;
 
 namespace ConsoleApp;
 
@@ -75,7 +76,7 @@ public static class Commands
                 return;
             }
 
-            Console.WriteLine(GlobalData.help);
+            Console.WriteLine(GlobalData.Help);
             Console.WriteLine();
         }
         else if (command == "exit" || command == "close" || command == "quit" || command == "q")
@@ -288,7 +289,7 @@ public static class Commands
                     continue;
 
                 byte[] fileContent = File.ReadAllBytes(filePath);
-                City city = CitySerializer.Deserialize(fileContent);
+                City city = CitySerializer.FromJava(fileContent);
 
                 Console.WriteLine(
                     "data:\n" +
@@ -341,7 +342,15 @@ public static class Commands
 
         if (key.Key == ConsoleKey.Y)
         {
-            string fileContent = "{\r\n\tcities:\r\n\t[\r\n";
+            string fileContent = "";
+            try
+            {
+                CityPackage cityPackage = new CityPackage("cities.json", cityList);
+                fileContent = CityPackageSerializer.ToJson(cityPackage);
+            }
+            catch (Exception ex) { }
+
+            fileContent = "{\r\n\tcities:\r\n\t[\r\n";
             foreach (var city in cityList)
             {
                 fileContent += $"\t\t{{\r\n\t\t\tName: \"{city.CityName}\",\r\n\t\t\tx: \"{city.PosX}\",\r\n\t\t\ty: \"{city.PosY}\",\r\n\t\t}},\r\n";
@@ -447,7 +456,7 @@ public static class Commands
 
     private static void GetContinentPackgeInfo(string packgePath)
     {
-        ContinentPackge contPackge = ContinentPackgeSerializer.DeserializePackge(packgePath);
+        ContinentPackage contPackge = ContinentPackgeSerializer.FromJava(packgePath);
 
         Console.WriteLine(
             $"processing file {packgePath}\n" +
@@ -473,15 +482,15 @@ public static class Commands
 
         packgePath = isAbsolutePath? packgePath : GlobalData.GeneratedDir + @$"\{packgePath}";
 
-        ContinentPackge continentPackge;
+        ContinentPackage continentPackge;
         if (File.Exists(packgePath))
         {
-            continentPackge = ContinentPackgeSerializer.DeserializePackge(packgePath);
+            continentPackge = ContinentPackgeSerializer.FromJava(packgePath);
             Console.WriteLine($"opened {packgePath}\n");
         }
         else
         {
-            continentPackge = new ContinentPackge(0, 0, new List<Continent>(), "NewContinentPackge");
+            continentPackge = new ContinentPackage(0, 0, new List<Continent>(), "NewContinentPackge");
             Console.WriteLine("creating new packge\n");
         }
 
@@ -508,7 +517,7 @@ public static class Commands
         Console.WriteLine("exited from managing packge");
     }
 
-    private static void HandleManagePackgeCommand(ref bool commandCycle, string[] inputArray, ContinentPackge continentPackge)
+    private static void HandleManagePackgeCommand(ref bool commandCycle, string[] inputArray, ContinentPackage continentPackge)
     {
         Console.WriteLine();
 
@@ -557,7 +566,7 @@ public static class Commands
         }
         else if (command == "save" || command == "sv")
         {
-            byte[] packgeBytes = ContinentPackgeSerializer.Serialize(continentPackge);
+            byte[] packgeBytes = ContinentPackgeSerializer.ToJava(continentPackge);
 
             if (inputArray.Length > 1)
             {

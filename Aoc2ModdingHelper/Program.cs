@@ -4,13 +4,18 @@
     {
         static void Main(string[] args)
         {
+            if (GlobalData.GeneratedDir == null)
+            {
+                throw new NullReferenceException($"{nameof(GlobalData.GeneratedDir)} is null.");
+            }
+
             if (!Directory.Exists(GlobalData.GeneratedDir))
                 Directory.CreateDirectory(GlobalData.GeneratedDir);
 
             Config.Load();
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(GlobalData.help);
+            Console.WriteLine(GlobalData.Help);
             Console.WriteLine();
 
             while (GlobalData.CommandCycle)
@@ -25,11 +30,6 @@
                 Console.WriteLine();
 
                 string[] inputArray = input.Split(' ');
-
-                //for (int i = 0; i < inputArray.Length; i++)
-                //{
-                //    inputArray[i] = inputArray[i].ToLower();
-                //}
 
                 Commands.HandleCommand(inputArray);
             }

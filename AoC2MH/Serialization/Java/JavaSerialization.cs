@@ -1,6 +1,8 @@
-﻿namespace Aoc2mh.Utils;
+﻿using Aoc2mh.Utils;
 
-public class JavaUtils
+namespace AoC2mh.Serialization.Java;
+
+public class JavaSerialization
 {
     public static (short length, string str) TakeTcString(byte[] data, int startIndex)
     {

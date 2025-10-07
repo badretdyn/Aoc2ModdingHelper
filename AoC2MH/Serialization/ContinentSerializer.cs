@@ -1,27 +1,37 @@
 ﻿using Aoc2mh.Entities;
 using Aoc2mh.Utils;
 
-namespace Aoc2mh.Serializers;
+namespace AoC2mh.Serialization;
 
-public class ContinentSerializer
+public static class ContinentSerializer
 {
-    public static Continent Deserialize(string filePath)
+    public static byte[] ToJava(Continent continent)
     {
-        string fileName = filePath.Split('\\')[^1];
+        throw new NotImplementedException();
+    }
 
-        byte[] fileContent = File.ReadAllBytes(filePath);
+    public static Continent FromJava(string filePath)
+    {
+        string fileName = Path.GetFileName(filePath);
+        byte[] fileBytes = File.ReadAllBytes(filePath);
+        Continent continent = FromJava(fileBytes);
+        continent.FileName = fileName;
+        return continent;
+    }
 
+    public static Continent FromJava(byte[] data)
+    {
         int fBIndex = 0x79;
         int fGIndex = 0x7d;
         int fRIndex = 0x81;
         int nameLengthIndex = 0x86;
         int nameIndex = 0x88;
 
-        float fB = BinaryUtils.ConvertToFloat32(fileContent, fBIndex);
-        float fG = BinaryUtils.ConvertToFloat32(fileContent, fGIndex);
-        float fR = BinaryUtils.ConvertToFloat32(fileContent, fRIndex);
-        short nameLength = BinaryUtils.ConvertToInt16(fileContent, nameLengthIndex);
-        string name = BinaryUtils.ConvertToString(fileContent, nameLength, nameIndex);
+        float fB = BinaryUtils.ConvertToFloat32(data, fBIndex);
+        float fG = BinaryUtils.ConvertToFloat32(data, fGIndex);
+        float fR = BinaryUtils.ConvertToFloat32(data, fRIndex);
+        short nameLength = BinaryUtils.ConvertToInt16(data, nameLengthIndex);
+        string name = BinaryUtils.ConvertToString(data, nameLength, nameIndex);
 
         //FileName = filePath.Split('\\')[^1];
         //B = fB;
@@ -30,9 +40,10 @@ public class ContinentSerializer
         //NameLength = nameLength;
         //Name = name;
 
-        return new Continent(fileName, fB, fG, fR, nameLength, name);
+        return new Continent(fB, fG, fR, nameLength, name);
     }
 
+    [Obsolete("Have to be removed", false)]
     public static Continent[] DeserializeMany(string packgeDataPath)
     {
         string[] filePaths = Directory.GetFiles(packgeDataPath);

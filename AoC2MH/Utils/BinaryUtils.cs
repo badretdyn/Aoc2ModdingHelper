@@ -78,6 +78,12 @@ namespace Aoc2mh.Utils
             return bytes;
         }
 
+        public static string BytesToCsharp(string filePath, bool useLineBreak = false)
+        {
+            byte[] fileContent = File.ReadAllBytes(filePath);
+            return BytesToCsharp(fileContent, useLineBreak);
+        }
+
         public static string BytesToCsharp(byte[] bytes, bool useLineBreak = false)
         {
             string stringBytes = "";
@@ -91,12 +97,7 @@ namespace Aoc2mh.Utils
             return stringBytes;
         }
 
-        public static string BytesToCsharp(string filePath, bool useLineBreak = false)
-        {
-            byte[] fileContent = File.ReadAllBytes(filePath);
-            return BytesToCsharp(filePath, useLineBreak);
-        }
-
+        [Obsolete("Have to be changed/removed", false)]
         public static int[] FindPattern(byte[] source, byte[] pattern)
         {
             if (source == null)
