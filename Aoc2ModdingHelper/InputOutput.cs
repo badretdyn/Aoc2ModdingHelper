@@ -1,4 +1,4 @@
-﻿namespace Aoc2ModdingHelper.Utils;
+﻿namespace ConsoleApp;
 
 public static class InputOutput
 {

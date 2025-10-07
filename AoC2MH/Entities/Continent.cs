@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aoc2ModdingHelper.Entities
+namespace Aoc2mh.Entities
 {
     public class Continent
     {

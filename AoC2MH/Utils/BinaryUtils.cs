@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Aoc2ModdingHelper.Utils
+namespace Aoc2mh.Utils
 {
     public static class BinaryUtils
     {

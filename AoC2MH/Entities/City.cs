@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Aoc2ModdingHelper.Entities;
+namespace Aoc2mh.Entities;
 
 public class City
 {

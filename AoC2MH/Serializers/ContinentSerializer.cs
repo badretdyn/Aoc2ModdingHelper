@@ -1,7 +1,7 @@
-﻿using Aoc2ModdingHelper.Entities;
-using Aoc2ModdingHelper.Utils;
+﻿using Aoc2mh.Entities;
+using Aoc2mh.Utils;
 
-namespace Aoc2ModdingHelper.Serializers;
+namespace Aoc2mh.Serializers;
 
 public class ContinentSerializer
 {
@@ -48,7 +48,7 @@ public class ContinentSerializer
             }
             catch (Exception ex)
             {
-                InputOutput.WriteError($"error while processing {filePath}\n{ex.Message}");
+                //InputOutput.WriteError($"error while processing {filePath}\n{ex.Message}");
             }
         }
 

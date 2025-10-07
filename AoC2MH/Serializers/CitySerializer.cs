@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using Aoc2ModdingHelper.Entities;
-using Aoc2ModdingHelper.Exceptions;
-using Aoc2ModdingHelper.Utils;
+using Aoc2mh.Entities;
+using Aoc2mh.Utils;
+using Aoc2mh.Exceptions;
 
-namespace Aoc2ModdingHelper.Serializers
+namespace Aoc2mh.Serializers
 {
     public class CitySerializer
     {

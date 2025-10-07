@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aoc2ModdingHelper.Exceptions
+namespace Aoc2mh.Exceptions
 {
     public class PatternNotFoundException : Exception
     {

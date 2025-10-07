@@ -1,4 +1,4 @@
-﻿namespace Aoc2ModdingHelper.Utils;
+﻿namespace Aoc2mh.Utils;
 
 public class JavaUtils
 {

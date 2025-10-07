@@ -1,9 +1,7 @@
-﻿using Aoc2ModdingHelper.Entities;
-using Aoc2ModdingHelper.Serializers;
-using Aoc2ModdingHelper.Utils;
-using System.IO;
+﻿using Aoc2mh.Entities;
+using Aoc2mh.Serializers;
 
-namespace Aoc2ModdingHelper;
+namespace ConsoleApp;
 
 public static class Commands
 {

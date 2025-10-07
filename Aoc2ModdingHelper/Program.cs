@@ -1,6 +1,4 @@
-﻿using Aoc2ModdingHelper.Utils;
-
-namespace Aoc2ModdingHelper
+﻿namespace ConsoleApp
 {
     internal class Program
     {

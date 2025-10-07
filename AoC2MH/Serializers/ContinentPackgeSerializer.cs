@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Aoc2ModdingHelper.Entities;
-using Aoc2ModdingHelper.Utils;
+using Aoc2mh.Entities;
+using Aoc2mh.Utils;
 
-namespace Aoc2ModdingHelper.Serializers;
+namespace Aoc2mh.Serializers;
 
 public static class ContinentPackgeSerializer
 {

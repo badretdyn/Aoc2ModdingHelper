@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
-using Aoc2ModdingHelper.Utils;
 
-namespace Aoc2ModdingHelper;
+namespace ConsoleApp;
 
 public class Config
 {
