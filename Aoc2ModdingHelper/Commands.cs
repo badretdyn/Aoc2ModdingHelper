@@ -649,6 +649,6 @@ public static class Commands
     {
         byte[] provBytes = File.ReadAllBytes(provPath);
         Province province = ProvinceSerializer.FromJava(provBytes);
-        Console.WriteLine(province);
+        Console.WriteLine(province.ToStringList());
     }
 }

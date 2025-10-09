@@ -20,16 +20,6 @@ namespace ConsoleApp
             Console.WriteLine(GlobalData.Help);
             Console.WriteLine();
 
-            #region test
-            //byte[] provBytes = File.ReadAllBytes(@"D:\game\AoC2 CR BE\map\Earth_AoC1\data\provinces\0");
-            //var prov = ProvinceSerializer.FromJava(provBytes);
-            //Console.WriteLine(prov.ToStringList());
-
-            //provBytes = File.ReadAllBytes(@"D:\game\AoC2 CR BE\map\Earth_AoC1\data\provinces\10");
-            //prov = ProvinceSerializer.FromJava(provBytes);
-            //Console.WriteLine(prov.ToStringList());
-            #endregion
-
             while (GlobalData.CommandCycle)
             {
                 Console.Write("< ");

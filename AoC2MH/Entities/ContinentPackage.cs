@@ -1,10 +1,12 @@
 ﻿using Aoc2mh.Utils;
+using AoC2mh.Entities;
 using AoC2mh.Exceptions;
 using AoC2mh.Serialization.Java;
+using AoC2mh.Utils;
 
 namespace Aoc2mh.Entities;
 
-public class ContinentPackage : IJavaSerializable
+public class ContinentPackage : IJavaSerializable, IStringifyable
 {
     public string FileName { get; set; }
     public int ContinentCount { get; set; }
@@ -46,17 +48,32 @@ public class ContinentPackage : IJavaSerializable
         return $"{nameof(ContinentPackage)}:{{{ContinentCount}, {ArrayListCapacity}, {Continents}, {PackageName}}}";
     }
 
-    public string ToStringList(string listElementSeparator = ",\n")
+    public string ToStringList(int tabCount = 0)
     {
-        string continents = "";
+        string result =
+            $"{nameof(ContinentPackage)}:" + "\n" +
+            new string('\t', tabCount) + $"{{" + "\n" +
+            new string('\t', tabCount + 1) + $"FileName: {FileName}," + "\n" +
+            new string('\t', tabCount + 1) + $"ContinentCount: {ContinentCount}," + "\n" +
+            new string('\t', tabCount + 1) + $"ArrayListCapacity: {ArrayListCapacity}," + "\n" +
+            new string('\t', tabCount + 1) + $"Continents: {StringUtils.StringifyList(list: Continents, tabCount: tabCount)}," + "\n" +
+            new string('\t', tabCount + 1) + $"PackageName: {PackageName}," + "\n" +
+            new string('\t', tabCount) + $"}}";
 
-        for (int i = 0; i < ContinentCount; i++)
-        {
-            continents += "\t" + Continents[i] + (i == ContinentCount - 1 ? "" : listElementSeparator);
-        }
-
-        return $"{nameof(ContinentPackage)}:{{{ContinentCount}, {ArrayListCapacity},\n{Continents}:\n[\n{continents}\n],\n{PackageName}}}";
+        return result;
     }
+
+    //public string ToStringList(string listElementSeparator = ",\n")
+    //{
+    //    string continents = "";
+
+    //    for (int i = 0; i < ContinentCount; i++)
+    //    {
+    //        continents += "\t" + Continents[i] + (i == ContinentCount - 1 ? "" : listElementSeparator);
+    //    }
+
+    //    return $"{nameof(ContinentPackage)}:{{{ContinentCount}, {ArrayListCapacity},\n{Continents}:\n[\n{continents}\n],\n{PackageName}}}";
+    //}
 
     public byte[] GetTcString()
     {
