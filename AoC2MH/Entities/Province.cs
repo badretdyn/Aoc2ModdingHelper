@@ -56,6 +56,11 @@ namespace AoC2mh.Entities
             ProvinceInfo = provinceInfo;
         }
 
+        public Province()
+        {
+
+        }
+
         public override string ToString()
         {
             string result =

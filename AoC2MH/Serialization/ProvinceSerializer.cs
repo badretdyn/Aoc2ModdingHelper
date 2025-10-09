@@ -16,6 +16,7 @@ namespace AoC2mh.Serialization
             return province;
         }
 
+        [Obsolete("It does not deserialize all provinces (on borders of the map).", false)]
         public static Province FromJava(byte[] data)
         {
             // indexes
@@ -24,7 +25,7 @@ namespace AoC2mh.Serialization
             int portShiftYIndex = 0x155;
 
             int neighboringProvincesSizeIndex = 0x184;
-            int neighboringProvincesSize2Index = 0x18a;
+            //int neighboringProvincesSize2Index = 0x18a;
 
             // values
             int levelOfPort = BinaryUtils.ConvertToInt32(data, levelOfPortIndex);

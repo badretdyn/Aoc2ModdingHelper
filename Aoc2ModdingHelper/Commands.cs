@@ -1,4 +1,5 @@
 ﻿using Aoc2mh.Entities;
+using Aoc2mh.Exceptions;
 using AoC2mh.Entities;
 using AoC2mh.Serialization;
 
@@ -287,6 +288,66 @@ public static class Commands
             }
             else
                 Console.WriteLine("input path to the province you want to deserialize");
+
+            Console.WriteLine();
+        }
+        else if (command == "tomapeditor" || command == "tme")
+        {
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: tomapeditor/tme %modifier% %provs_path%\n" +
+                        "converts provinces to map editor file.\n" +
+                        $"creates file in {GlobalData.GeneratedDir}\\mapAoC2_v2.txt\n" +
+                        $"warining: it does not deserialize all provinces (on borders of the map)\n" +
+                        @"example: gpi AoC2\map\%your_map%\data\provinces");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        ToMapEditor(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        InputOutput.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+            else
+                Console.WriteLine("input path to the provinces you want to convert");
+
+            Console.WriteLine();
+        }
+        else if (command == "test")
+        {
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: test\n" +
+                        "testing..." +
+                        @"example: test");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        TestCommand();
+                    }
+                    catch (Exception ex)
+                    {
+                        InputOutput.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+            else
+                TestCommand();
 
             Console.WriteLine();
         }
@@ -650,5 +711,52 @@ public static class Commands
         byte[] provBytes = File.ReadAllBytes(provPath);
         Province province = ProvinceSerializer.FromJava(provBytes);
         Console.WriteLine(province.ToStringList());
+    }
+
+    private static void ToMapEditor(string provsPath)
+    {
+        string[] filePaths = Directory.GetFiles(provsPath);
+
+        string mapEditorFile = GlobalData.GeneratedDir + @"\mapAoC2_v2.txt";
+        File.WriteAllText(mapEditorFile, "");
+
+        foreach (var filePath in filePaths)
+        {
+            Province province = new Province();
+            try
+            {
+                province = ProvinceSerializer.FromJava(filePath);
+            }
+            catch (Exception ex)
+            {
+                InputOutput.WriteError($"file: {filePath}\n{ex.Message}");
+            }
+            List<short> list;
+            string toFile = "";
+
+            list = province.PointsX;
+            if (list == null)
+            {
+                Console.WriteLine(filePath);
+                continue;
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+                toFile += list[i] + (i < list.Count - 1 ? "," : "\n");
+            }
+            list = province.PointsY;
+            for (int i = 0; i < list.Count; i++)
+            {
+                toFile += list[i] + (i < list.Count - 1 ? "," : "\n");
+            }
+
+            File.AppendAllText(mapEditorFile, toFile);
+        }
+        Console.WriteLine($"file generated in {mapEditorFile}");
+    }
+
+    private static void TestCommand()
+    {
+        Console.WriteLine("there is no testing but this WriteLine!");
     }
 }
