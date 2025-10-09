@@ -261,6 +261,35 @@ public static class Commands
 
             Console.WriteLine();
         }
+        else if (command == "getprovincesinfo" || command == "gpi")
+        {
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: getprovinceinfo/gpi %modifier% %prov_path%\n" +
+                        "deserialize province information" +
+                        @"example: gpi AoC2\map\%your_map%\data\provinces\0");
+                    Console.WriteLine();
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        GetProvinceInfo(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        InputOutput.WriteError($"{ex.Message}");
+                    }
+                }
+            }
+            else
+                Console.WriteLine("input path to the province you want to deserialize");
+
+            Console.WriteLine();
+        }
     }
 
     private static void GetCitiesInfo(string citiesPath, bool askPath = false)
@@ -615,4 +644,11 @@ public static class Commands
         }
     }
     #endregion ManagePackge
+
+    private static void GetProvinceInfo(string provPath)
+    {
+        byte[] provBytes = File.ReadAllBytes(provPath);
+        Province province = ProvinceSerializer.FromJava(provBytes);
+        Console.WriteLine(province);
+    }
 }
