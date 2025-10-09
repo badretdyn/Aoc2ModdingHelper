@@ -261,7 +261,7 @@ public static class Commands
 
             Console.WriteLine();
         }
-        else if (command == "getprovincesinfo" || command == "gpi")
+        else if (command == "getprovinceinfo" || command == "gpi")
         {
             if (inputArray.Length > 1)
             {
