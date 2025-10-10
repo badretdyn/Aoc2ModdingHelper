@@ -309,7 +309,7 @@ public static class Commands
                 {
                     try
                     {
-                        ToMapEditor(path);
+                        ToMapEditor2(path);
                     }
                     catch (Exception ex)
                     {
@@ -713,6 +713,7 @@ public static class Commands
         Console.WriteLine(province.ToStringList());
     }
 
+    [Obsolete("Does not deserialize all provinces (on borders of the map).", false)]
     private static void ToMapEditor(string provsPath)
     {
         string[] filePaths = Directory.GetFiles(provsPath);
@@ -755,8 +756,54 @@ public static class Commands
         Console.WriteLine($"file generated in {mapEditorFile}");
     }
 
+    private static void ToMapEditor2(string provsPath)
+    {
+        string[] filePaths = Directory.GetFiles(provsPath);
+
+        string mapEditorFile = GlobalData.GeneratedDir + @"\mapAoC2_v2.txt";
+        File.WriteAllText(mapEditorFile, "");
+
+        foreach (var filePath in filePaths)
+        {
+            ProvincePoints provincePoints = new ProvincePoints(null, null);
+            try
+            {
+                provincePoints = ProvinceSerializer.PointsFromJava(filePath);
+            }
+            catch (Exception ex)
+            {
+                InputOutput.WriteError($"file: {filePath}\n{ex.Message}");
+            }
+            List<short> list;
+            string toFile = "";
+
+            list = provincePoints.PointsX;
+            if (list == null)
+            {
+                Console.WriteLine(filePath);
+                continue;
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+                toFile += list[i] + (i < list.Count - 1 ? "," : "\n");
+            }
+            list = provincePoints.PointsY;
+            for (int i = 0; i < list.Count; i++)
+            {
+                toFile += list[i] + (i < list.Count - 1 ? "," : "\n");
+            }
+
+            File.AppendAllText(mapEditorFile, toFile);
+        }
+        Console.WriteLine($"file generated in {mapEditorFile}");
+    }
+
     private static void TestCommand()
     {
         Console.WriteLine("there is no testing but this WriteLine!");
+
+        byte[] fileBytes = File.ReadAllBytes(@"D:\game\AoC2 CR BE\map\Earth_AoC1\data\provinces\174");
+        ProvincePoints provincePoints = ProvinceSerializer.PointsFromJava(fileBytes);
+        Console.WriteLine(provincePoints.ToStringList());
     }
 }

@@ -16,6 +16,30 @@ namespace AoC2mh.Serialization
             return province;
         }
 
+        public static ProvincePoints PointsFromJava(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            ProvincePoints provincePoints = PointsFromJava(fileBytes);
+            provincePoints.FileName = fileName;
+            return provincePoints;
+        }
+
+        public static ProvincePoints PointsFromJava(byte[] data)
+        {
+            int[] listIndexes = BinaryUtils.FindPattern(data, [0x73, 0x71, 0x00, 0x7E, 0x00, 0x04]);
+            int pointsXIndex = listIndexes[1];
+            int current = pointsXIndex + 6; int pointsXSize = BinaryUtils.ConvertToInt32(data, current);
+            current += 10; List<short> pointsX = DeserializeListShorts(ref current, data, pointsXSize);
+
+            int pointsYIndex = listIndexes[2];
+            current = pointsYIndex + 6; int pointsYSize = BinaryUtils.ConvertToInt32(data, current);
+            current += 10; List<short> pointsY = DeserializeListShorts(ref current, data, pointsXSize);
+
+            ProvincePoints provincePoints = new ProvincePoints(pointsX, pointsY);
+            return provincePoints;
+        }
+
         [Obsolete("It does not deserialize all provinces (on borders of the map).", false)]
         public static Province FromJava(byte[] data)
         {
@@ -87,6 +111,14 @@ namespace AoC2mh.Serialization
 
             for (int i = 0; i < listSize; i++)
             {
+                if (i == 293 && currentIndex > 0x17f2)
+                    Console.WriteLine("cool");
+
+                if (data[currentIndex] == 0x71)
+                {
+                    currentIndex += 5; result.Add(0); continue;
+                }
+
                 short sh = DeserializeShort(ref currentIndex, data[currentIndex..(currentIndex+8)]);
                 result.Add(sh);
             }
@@ -96,10 +128,11 @@ namespace AoC2mh.Serialization
 
         private static short DeserializeShort(ref int endIndex, byte[] data)
         {
-            byte[] meta = data[0..6];
-            if (meta.SequenceEqual(new byte[] { 0x73, 0x71, 0x00, 0x7E, 0x00, 0x06 }))
+            byte[] meta = data[0..2];
+
+            if (meta.SequenceEqual(new byte[] { 0x73, 0x71, }))
             {
-                endIndex += data.Length;
+                endIndex += data.Length ;
                 return BinaryUtils.ConvertToInt16(data, 6); // 0 1 2 3 4 5 6 7
             }
 
