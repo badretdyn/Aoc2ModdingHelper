@@ -801,9 +801,5 @@ public static class Commands
     private static void TestCommand()
     {
         Console.WriteLine("there is no testing but this WriteLine!");
-
-        byte[] fileBytes = File.ReadAllBytes(@"D:\game\AoC2 CR BE\map\Earth_AoC1\data\provinces\174");
-        ProvincePoints provincePoints = ProvinceSerializer.PointsFromJava(fileBytes);
-        Console.WriteLine(provincePoints.ToStringList());
     }
 }

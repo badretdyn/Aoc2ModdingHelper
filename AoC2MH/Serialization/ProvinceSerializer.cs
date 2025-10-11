@@ -109,17 +109,16 @@ namespace AoC2mh.Serialization
         {
             List<short> result = new List<short>();
 
+            short lastNormal = 0;
             for (int i = 0; i < listSize; i++)
             {
-                if (i == 293 && currentIndex > 0x17f2)
-                    Console.WriteLine("cool");
-
                 if (data[currentIndex] == 0x71)
                 {
-                    currentIndex += 5; result.Add(0); continue;
+                    currentIndex += 5; result.Add(lastNormal); continue;
                 }
 
                 short sh = DeserializeShort(ref currentIndex, data[currentIndex..(currentIndex+8)]);
+                lastNormal = sh;
                 result.Add(sh);
             }
 
