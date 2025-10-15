@@ -1,4 +1,4 @@
-﻿namespace AoC2mh.Utils;
+﻿namespace Aoc2mh.Utils;
 
 public interface IStringifyable
 {

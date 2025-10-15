@@ -3,7 +3,7 @@ using Aoc2mh.Entities;
 using Aoc2mh.Utils;
 using Aoc2mh.Exceptions;
 
-namespace AoC2mh.Serialization
+namespace Aoc2mh.Serialization
 {
     public static class CitySerializer
     {

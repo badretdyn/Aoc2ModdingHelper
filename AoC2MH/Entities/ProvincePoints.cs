@@ -1,7 +1,7 @@
-﻿using AoC2mh.Serialization.Java;
-using AoC2mh.Utils;
+﻿using Aoc2mh.Serialization.Java;
+using Aoc2mh.Utils;
 
-namespace AoC2mh.Entities;
+namespace Aoc2mh.Entities;
 
 public class ProvincePoints : IJavaSerializable, IStringifyable
 {

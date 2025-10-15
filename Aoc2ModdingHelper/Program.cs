@@ -1,4 +1,4 @@
-﻿using AoC2mh.Serialization;
+﻿using Aoc2mh.Serialization;
 
 namespace ConsoleApp
 {

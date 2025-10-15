@@ -1,6 +1,6 @@
-﻿using AoC2mh.Utils;
+﻿using Aoc2mh.Utils;
 
-namespace AoC2mh.Entities;
+namespace Aoc2mh.Entities;
 
 public class ProvinceInfo
 {

@@ -1,8 +1,8 @@
 ﻿using Aoc2mh.Entities;
-using AoC2mh.Exceptions;
-using AoC2mh.Utils;
+using Aoc2mh.Exceptions;
+using Aoc2mh.Utils;
 
-namespace AoC2mh.Entities
+namespace Aoc2mh.Entities
 {
     public class CityPackage : IStringifyable
     {

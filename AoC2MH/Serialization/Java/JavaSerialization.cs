@@ -1,8 +1,8 @@
 ﻿using Aoc2mh.Utils;
 
-namespace AoC2mh.Serialization.Java;
+namespace Aoc2mh.Serialization.Java;
 
-public class JavaSerialization
+public static class IJavaSerialization
 {
     public static (short length, string str) TakeTcString(byte[] data, int startIndex)
     {

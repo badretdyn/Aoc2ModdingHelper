@@ -1,6 +1,6 @@
 ﻿using Aoc2mh.Utils;
-using AoC2mh.Exceptions;
-using AoC2mh.Serialization.Java;
+using Aoc2mh.Exceptions;
+using Aoc2mh.Serialization.Java;
 
 namespace Aoc2mh.Entities;
 

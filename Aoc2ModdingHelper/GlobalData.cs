@@ -11,13 +11,14 @@
             "* help\n" +
             "* clear/cl\n" +
             "* getcitiesinfo/gci -askpath/--a\n" +
-            "* createaoc2file/caf\n" +
+            "* createaocfile/caf\n" +
             "* getcontinentsinfo/gcni\n" +
             "* getcontinentpackgeinfo/gcpi\n" +
             "* managepackge/mp\n" +
             "* getprovinceinfo/gpi %modifier% %prov_path\n" +
             "* tomapeditor/tme %modifier% %provs_path%\n" +
             "* !convertcities/cc -del/--d\n" +
+            "* !saveconfig/sc\n" +
             "* exit/close/quit/q/[Ctrl]+[C]\n" +
             "common modifiers:\n" +
             "* -help/--? -- prints information about command";

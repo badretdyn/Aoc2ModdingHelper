@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Aoc2mh.Serialization.Java;
 
-namespace AoC2mh.Serialization.Java
+public interface IJavaSerializable
 {
-    public interface IJavaSerializable
-    {
-        string FileName { get; set; }
+    string FileName { get; set; }
 
-        byte[] GetTcString();
-    }
+    byte[] GetTcString();
 }

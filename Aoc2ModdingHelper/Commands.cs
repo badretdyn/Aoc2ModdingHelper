@@ -1,7 +1,5 @@
 ﻿using Aoc2mh.Entities;
-using Aoc2mh.Exceptions;
-using AoC2mh.Entities;
-using AoC2mh.Serialization;
+using Aoc2mh.Serialization;
 
 namespace ConsoleApp;
 
@@ -139,10 +137,8 @@ public static class Commands
         else if (command == "saveconfig" || command == "sc")
         {
             Config.Save();
-
-            Console.WriteLine();
         }
-        else if (command == "createaoc2file" || command == "caf")
+        else if (command == "createaocfile" || command == "caf")
         {
             if (inputArray.Length > 1)
             {
@@ -161,7 +157,7 @@ public static class Commands
                 {
                     try
                     {
-                        CreateAoc2File(path);
+                        CreateAocFile(path);
                     }
                     catch (Exception ex)
                     {
@@ -170,7 +166,7 @@ public static class Commands
                 }
             }
             else
-                CreateAoc2File(Directory.GetParent(GlobalData.CurDir).ToString());
+                CreateAocFile(Directory.GetParent(GlobalData.CurDir).ToString());
 
             Console.WriteLine();
         }
@@ -470,59 +466,30 @@ public static class Commands
 
     }
 
-    private static void CreateAoc2File(string path)
+    private static void CreateAocFile(string dirPath)
     {
-        if (path == null || path == "")
+        var aocf = AgeOfCivilizationFileSerializer.Deserialize(dirPath);
+
+        Console.WriteLine("AoC File:\n" + aocf.ToStringList());
+
+        string filePath = dirPath + @"\" + aocf.FileName;
+        string fileContent = AgeOfCivilizationFileSerializer.Serialize(aocf);
+
+        if (File.Exists(filePath))
         {
-            path = Directory.GetParent(GlobalData.CurDir).ToString();
-
-            if (path == null || path == "")
-            {
-                if (GlobalData.CurDir == null || GlobalData.CurDir == "")
-                    throw new ArgumentException($"{GlobalData.CurDir} must be a directory");
-                path = GlobalData.CurDir;
-            }
-        }
-
-        Console.WriteLine($"directory path: {path}");
-
-        if (!Directory.Exists(path))
-            throw new DirectoryNotFoundException($"{path} is not a directory");
-
-        string[] filePaths = Directory.GetFiles(path);
-        
-        string GetFileName(string path)
-        {
-            string[] array = path.Split('\\');
-
-            return array[^1];
-        }
-
-        List<string> files = new List<string>();
-        foreach (string filePath in filePaths)
-        {
-            string file = GetFileName(filePath);
-            if (file == "Age_of_Civilizations")
-                continue;
-            Console.WriteLine(file);
-            files.Add(file);
-        }
-
-        string aoc2FileContent = string.Join(';', files);
-        aoc2FileContent += ";";
-
-        if (File.Exists(path + @"\Age_of_Civilizations"))
-        {
-            Console.WriteLine("aoc2 file is exists. overwrite? [Y] to accept");
+            Console.WriteLine($"file {filePath} is exist. overwrite? [Y] to accept");
             var key = Console.ReadKey();
             if (key.Key == ConsoleKey.Y)
             {
-                File.WriteAllText(path + @"\Age_of_Civilizations", aoc2FileContent);
+                File.WriteAllText(filePath, fileContent);
                 return;
             }
+
+            File.WriteAllText(filePath + "_New", fileContent);
+            return;
         }
 
-        File.WriteAllText(path + @"\Age_of_Civilizations_Created", aoc2FileContent);
+        File.WriteAllText(filePath, fileContent);
     }
 
     private static void GetContinentsInfo(string aoc2Path)

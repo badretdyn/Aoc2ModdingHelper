@@ -1,7 +1,7 @@
 ﻿using Aoc2mh.Entities;
 using Aoc2mh.Utils;
 
-namespace AoC2mh.Serialization;
+namespace Aoc2mh.Serialization;
 
 public static class ContinentSerializer
 {

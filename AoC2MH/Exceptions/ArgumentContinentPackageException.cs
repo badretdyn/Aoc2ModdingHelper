@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AoC2mh.Exceptions
+namespace Aoc2mh.Exceptions
 {
     public class ArgumentContinentPackageException : ArgumentException
     {

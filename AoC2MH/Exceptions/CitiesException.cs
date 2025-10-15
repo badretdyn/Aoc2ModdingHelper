@@ -1,4 +1,4 @@
-﻿namespace AoC2mh.Exceptions
+﻿namespace Aoc2mh.Exceptions
 {
     public class ArgumentCitiesException : ArgumentException
     {

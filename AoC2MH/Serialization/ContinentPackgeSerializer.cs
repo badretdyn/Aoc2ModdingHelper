@@ -1,8 +1,8 @@
 ﻿using Aoc2mh.Entities;
 using Aoc2mh.Utils;
-using AoC2mh.Serialization.Java;
+using Aoc2mh.Serialization.Java;
 
-namespace AoC2mh.Serialization;
+namespace Aoc2mh.Serialization;
 
 public static class ContinentPackgeSerializer
 {
@@ -61,7 +61,7 @@ public static class ContinentPackgeSerializer
             byte current = data[i];
             if (current == JavaSerializationConstants.TC_STRING)
             {
-                var tcString = JavaSerialization.TakeTcString(data, i);
+                var tcString = IJavaSerialization.TakeTcString(data, i);
 
                 short nameLength = tcString.length;
                 name = tcString.str;
@@ -102,7 +102,7 @@ public static class ContinentPackgeSerializer
 
             if (current == JavaSerializationConstants.TC_STRING)
             {
-                var tcString = JavaSerialization.TakeTcString(data, i);
+                var tcString = IJavaSerialization.TakeTcString(data, i);
                 nameLength = tcString.length;
                 name = tcString.str;
 

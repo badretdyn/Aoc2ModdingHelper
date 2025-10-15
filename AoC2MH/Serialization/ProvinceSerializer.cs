@@ -1,9 +1,9 @@
 ﻿using Aoc2mh.Exceptions;
 using Aoc2mh.Utils;
-using AoC2mh.Entities;
-using AoC2mh.Serialization.Java;
+using Aoc2mh.Entities;
+using Aoc2mh.Serialization.Java;
 
-namespace AoC2mh.Serialization
+namespace Aoc2mh.Serialization
 {
     public static class ProvinceSerializer
     {
@@ -90,7 +90,7 @@ namespace AoC2mh.Serialization
             currentIndex += 4; int regiondID = BinaryUtils.ConvertToInt32(data, currentIndex);
             currentIndex += 4; int shiftX = BinaryUtils.ConvertToInt32(data, currentIndex);
             currentIndex += 4; int shiftY = BinaryUtils.ConvertToInt32(data, currentIndex);
-            currentIndex += 4; string terraingTAG = JavaSerialization.TakeTcString(data, currentIndex).str;
+            currentIndex += 4; string terraingTAG = IJavaSerialization.TakeTcString(data, currentIndex).str;
             ProvinceInfo provinceInfo = new ProvinceInfo(growthRate, continentID, regiondID, shiftX, shiftY, terraingTAG);
 
             Province province = new Province("", levelOfPort, portShiftX, portShiftY, neighboringProvinces, neighboringSeaProvinces, pointsX, pointsY, provinceBorders, provinceInfo);
