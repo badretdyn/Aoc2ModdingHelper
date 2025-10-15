@@ -2,7 +2,7 @@
 
 namespace Aoc2mh.Serialization.Java;
 
-public static class IJavaSerialization
+public static class JavaSerialization
 {
     public static (short length, string str) TakeTcString(byte[] data, int startIndex)
     {

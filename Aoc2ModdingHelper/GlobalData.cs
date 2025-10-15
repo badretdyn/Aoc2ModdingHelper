@@ -17,6 +17,7 @@
             "* managepackge/mp\n" +
             "* getprovinceinfo/gpi %modifier% %prov_path\n" +
             "* tomapeditor/tme %modifier% %provs_path%\n" +
+            "* renamescenario/rs %modifier% %scenario_directory_path% %new_name%\n" +
             "* !convertcities/cc -del/--d\n" +
             "* !saveconfig/sc\n" +
             "* exit/close/quit/q/[Ctrl]+[C]\n" +

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aoc2ModdingHelper", "Aoc2ModdingHelper\Aoc2ModdingHelper.csproj", "{D4FD3A81-46B4-499E-8D8B-352742C85229}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AoC2mh", "AoC2MH\AoC2mh.csproj", "{97E623F0-6A71-49E9-8E31-A41B6EBA32AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aoc2mh", "AoC2MH\Aoc2mh.csproj", "{97E623F0-6A71-49E9-8E31-A41B6EBA32AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,8 @@
 ﻿using Aoc2mh.Entities;
 using Aoc2mh.Serialization;
+using Aoc2mh.Serialization.Java;
+using Aoc2mh.Utils;
+using System.Text.Json;
 
 namespace ConsoleApp;
 
@@ -317,6 +320,30 @@ public static class Commands
                 Console.WriteLine("input path to the provinces you want to convert");
 
             Console.WriteLine();
+        }
+        else if (command == "renamescenario" || command == "rs")
+        {
+            if (inputArray.Length == 2)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: renamescenario/rs %modifier% %scenario_directory_path% %new_name%\n" +
+                        "renames scenario. %new_name% has to have no spaces, however %path% can have.\n" +
+                        "scenarios located in %aoc2_path%\\map\\%map_name%\\scenarios\\\n" +
+                        @"example: mp D:\game\Age of Civilizations 2\map\Earth\scenarios\modernWorld myModernWorld");
+                    Console.WriteLine();
+                }
+                return;
+            }
+            else if (inputArray.Length >= 3)
+            {
+                path = string.Join(' ', inputArray[1..^1]);
+                string newName = inputArray[^1];
+                RenameScenario(path, newName);
+                return;
+            }
+
+            Console.WriteLine("input scenario directory path");
         }
         else if (command == "test")
         {
@@ -763,6 +790,35 @@ public static class Commands
             File.AppendAllText(mapEditorFile, toFile);
         }
         Console.WriteLine($"file generated in {mapEditorFile}");
+    }
+
+    private static void RenameScenario(string scenDirPath, string newName)
+    {
+        Scenario scenario = ScenarioSerializer.Deserialize(scenDirPath);
+
+        string newFileName = newName;
+        string newFileA = scenario.FileA.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFileC = scenario.FileC.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFileD = scenario.FileD.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFileHre = scenario.FileHre.Replace(Path.GetFileName(scenDirPath), newName);
+        string newScenarioInfoFileName = scenario.ScenarioInfo.FileName.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFilePd = scenario.FilePd.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFileW = scenario.FileW.Replace(Path.GetFileName(scenDirPath), newName);
+        string newFileE = scenario.FileE.Replace(Path.GetFileName(scenDirPath), newName);
+
+        File.Move(scenDirPath + "\\" + scenario.FileName, scenDirPath + "\\" + newFileName);
+        File.Move(scenDirPath + "\\" + scenario.FileA, scenDirPath + "\\" + newFileA);
+        File.Move(scenDirPath + "\\" + scenario.FileC, scenDirPath + "\\" + newFileC);
+        File.Move(scenDirPath + "\\" + scenario.FileD, scenDirPath + "\\" + newFileD);
+        File.Move(scenDirPath + "\\" + scenario.FileHre, scenDirPath + "\\" + newFileHre);
+        File.Move(scenDirPath + "\\" + scenario.ScenarioInfo.FileName, scenDirPath + "\\" + newScenarioInfoFileName);
+        File.Move(scenDirPath + "\\" + scenario.FilePd, scenDirPath + "\\" + newFilePd);
+        File.Move(scenDirPath + "\\" + scenario.FileW, scenDirPath + "\\" + newFileW);
+        File.Move(scenDirPath + "\\events\\" + scenario.FileE, scenDirPath + "\\events\\" + newFileE);
+
+        Directory.Move(scenDirPath, Directory.GetParent(scenDirPath).ToString() + "\\" + newFileName);
+
+        Console.WriteLine($"Scenario {scenDirPath} renamed\n");
     }
 
     private static void TestCommand()

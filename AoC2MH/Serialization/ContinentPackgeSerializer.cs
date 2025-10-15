@@ -61,7 +61,7 @@ public static class ContinentPackgeSerializer
             byte current = data[i];
             if (current == JavaSerializationConstants.TC_STRING)
             {
-                var tcString = IJavaSerialization.TakeTcString(data, i);
+                var tcString = JavaSerialization.TakeTcString(data, i);
 
                 short nameLength = tcString.length;
                 name = tcString.str;
@@ -102,7 +102,7 @@ public static class ContinentPackgeSerializer
 
             if (current == JavaSerializationConstants.TC_STRING)
             {
-                var tcString = IJavaSerialization.TakeTcString(data, i);
+                var tcString = JavaSerialization.TakeTcString(data, i);
                 nameLength = tcString.length;
                 name = tcString.str;
 
