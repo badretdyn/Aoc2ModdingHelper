@@ -321,6 +321,34 @@ public static class Commands
 
             Console.WriteLine();
         }
+        else if (command == "getscenariosinfo" || command == "gsi")
+        {
+            if (inputArray.Length > 1)
+            {
+                if (inputArray[1] == "-help" || inputArray[1] == "--?")
+                {
+                    Console.WriteLine("command: getscenariosinfo/gsi %modifier% %scenarios_dir_path%\n" +
+                        "gets all scenarios information.\n" +
+                        @"example: gsi AoC2\map\%your_map%\scenarios");
+                    Console.WriteLine();
+                }
+                else
+                {
+                    try
+                    {
+                        GetScenariosInfo(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        InputOutput.WriteError($"{ex.Message}");
+                    }
+                }
+
+                return;
+            }
+
+            InputOutput.WriteError("input scenarios directory path");
+        }
         else if (command == "renamescenario" || command == "rs")
         {
             if (inputArray.Length == 2)
@@ -564,7 +592,7 @@ public static class Commands
         if (packgePath.Contains(":\\"))
             isAbsolutePath = true;
 
-        packgePath = isAbsolutePath? packgePath : GlobalData.GeneratedDir + @$"\{packgePath}";
+        packgePath = isAbsolutePath ? packgePath : GlobalData.GeneratedDir + @$"\{packgePath}";
 
         ContinentPackage continentPackge;
         if (File.Exists(packgePath))
@@ -819,6 +847,21 @@ public static class Commands
         Directory.Move(scenDirPath, Directory.GetParent(scenDirPath).ToString() + "\\" + newFileName);
 
         Console.WriteLine($"Scenario {scenDirPath} renamed\n");
+    }
+
+    private static void GetScenariosInfo(string scensDirPath)
+    {
+        string[] dirPaths = Directory.GetDirectories(scensDirPath);
+
+        List<Scenario> scenarios = new List<Scenario>();
+
+        for (int i = 0; i < dirPaths.Length; i++)
+        {
+            string scenarioPath = dirPaths[i];
+            Scenario scenario = ScenarioSerializer.Deserialize(scenarioPath);
+            Console.WriteLine($"scenario:{scenarioPath}\n{scenario.ToStringList()}\n");
+            scenarios.Add(scenario);
+        }
     }
 
     private static void TestCommand()

@@ -9,7 +9,7 @@
             for (int i = 0; i < dirPaths.Length; i++)
             {
                 string dirName = Path.GetFileName(dirPaths[i]);
-                dirNames[i] = dirName;
+                dirNames.Add(dirName);
             }
 
             return dirNames.ToArray();

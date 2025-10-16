@@ -49,6 +49,7 @@ public class ScenarioInfo : IJavaSerializable, IStringifyable
         string result =
             $"{nameof(ScenarioInfo)}:" +
             $"{{" +
+            $"FileName: {FileName}, " +
             $"Age_of_Civilizations: {Age_of_Civilizations}, " +
             $"Data_Scenario_Info:  {Data_Scenario_Info}, " +
             $"}}";
@@ -60,8 +61,9 @@ public class ScenarioInfo : IJavaSerializable, IStringifyable
     {
 
         string result =
-            $"{nameof(Province)}:" + "\n" +
+            $"{nameof(ScenarioInfo)}:" + "\n" +
             new string('\t', tabCount) + $"{{" + "\n" +
+            new string('\t', tabCount + 1) + $"FileName: {FileName}," + "\n" +
             new string('\t', tabCount + 1) + $"Age_of_Civilizations: {Age_of_Civilizations}," + "\n" +
             new string('\t', tabCount + 1) + $"Data_Scenario_Info: {StringUtils.StringifyList(list: Data_Scenario_Info.ToList(), tabCount: tabCount + 1)}," + "\n" +
             new string('\t', tabCount) + $"}}";
@@ -74,7 +76,7 @@ public class ScenarioInfo : IJavaSerializable, IStringifyable
         throw new NotImplementedException();
     }
 
-    public class DataScenarioInfo
+    public class DataScenarioInfo : IStringifyable
     {
         public string Name { get; set; }
 
@@ -118,6 +120,25 @@ public class ScenarioInfo : IJavaSerializable, IStringifyable
                 $"Month: {Month}, " +
                 $"Day:  {Day}, " +
                 $"}}";
+
+            return result;
+        }
+
+        public string ToStringList(int tabCount = 0)
+        {
+
+            string result =
+                $"{nameof(DataScenarioInfo)}:" + "\n" +
+                new string('\t', tabCount) + $"{{" + "\n" +
+                new string('\t', tabCount + 1) + $"Name: {Name}," + "\n" +
+                new string('\t', tabCount + 1) + $"Author: {Author}," + "\n" +
+                new string('\t', tabCount + 1) + $"Wiki: {Wiki}," + "\n" +
+                new string('\t', tabCount + 1) + $"Civs: {Civs}," + "\n" +
+                new string('\t', tabCount + 1) + $"Age: {Age}," + "\n" +
+                new string('\t', tabCount + 1) + $"Year: {Year}," + "\n" +
+                new string('\t', tabCount + 1) + $"Month: {Month}," + "\n" +
+                new string('\t', tabCount + 1) + $"Day: {Day}," + "\n" +
+                new string('\t', tabCount) + $"}}";
 
             return result;
         }
